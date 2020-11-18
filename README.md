@@ -13,7 +13,7 @@ getgenv().SelectedPart = "Head"
 
 loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/BRM%205.lua"), true))()
 ```
-## GuiLibrary
+## UILibrary
 ```lua
 local UILibrary = loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/UILibrary.lua"), true))()
 
