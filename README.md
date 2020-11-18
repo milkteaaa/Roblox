@@ -15,8 +15,31 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/
 ```
 ## GuiLibrary
 ```lua
-local GuiLibrary = loadstring(game:HttpGet((""), true))()
-local Gui = GuiLibrary:CreateGui("GuiLibrary")
-local AimbotCategory = Gui:CreateCategory("Aimbot")
-AimbotCategory:CreateFunction("Toggle Aimbot")
+local UILibrary = loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/UILibrary.lua"), true))()
+
+UILibrary:ChangeName("Epic Library")
+local Main = UILibrary:CreateCategory("Main")
+local Other = UILibrary:CreateCategory("Other")
+local Credits = UILibrary:CreateCategory("Credits")
+
+Main:CreateToggle("Just Toggle", function(Toggle)
+	print(Toggle)
+end)
+
+Main:CreateButton("Just Button", function()
+	print("wow")
+end)
+
+Other:CreateToggle("Infinity Print", function(Toggle)
+	_G.Toggle = Toggle
+	spawn(function()
+		while _G.Toggle do
+			wait()
+			print("Toggled")
+		end
+	end)
+end)
+
+Credits:CreateLabel("UI Lib: AlexR32#3232")
+Credits:CreateLabel("Scripts: AlexR32#3232")
 ```
