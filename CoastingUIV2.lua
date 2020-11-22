@@ -135,6 +135,7 @@ function Library:Init(Config, LibraryParent)
 	Border.Parent = Main
 	Border.AnchorPoint = Vector2.new(0.5,0.5)
 	Border.BackgroundColor3 = Config.Theme.MainColor
+	Border.BackgroundTransparency = 1
 	Border.BorderColor3 = Color3.fromRGB(0,0,0)
 	Border.BorderSizePixel = 0
 	Border.Position = UDim2.new(0.5,0,0.5,0)
@@ -230,8 +231,9 @@ function Library:Init(Config, LibraryParent)
 	Tabs.Position = UDim2.new(0.5,0,0,40)
 	Tabs.Size = UDim2.new(1,-15,1,-40)
 	Tabs.ZIndex = 2
+
 	TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
-	TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Transparency = 0}):Play()
+	TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
 
 	Modal.Name = "Modal"
 	Modal.Parent = Main
@@ -240,13 +242,13 @@ function Library:Init(Config, LibraryParent)
 	Modal.BorderColor3 = Color3.fromRGB(0,0,0)
 	Modal.BorderSizePixel = 0
 	Modal.AutoButtonColor = false
+	Modal.Modal = true
 	Modal.Font = Config.Theme.TextFont
 	Modal.Text = ""
 	Modal.TextColor3 = Color3.fromRGB(255,255,255)
 	Modal.TextSize = 15
 	Modal.TextStrokeTransparency = 0.75
 	Modal.TextTransparency = 1
-
 	table.insert(Library.LibraryColorTable, Border)
 	table.insert(Library.LibraryColorTable, TabButtons)
 	MakeDraggable(Topbar, Main)
@@ -294,12 +296,12 @@ function Library:Init(Config, LibraryParent)
 	    if Library.UIOpen then
 			Modal.Modal = false
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
-	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Transparency = 1}):Play()
+	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	    elseif not Library.UIOpen then
 			Modal.Modal = true
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
-	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Transparency = 0}):Play()
+	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,15)}):Play()
 	    end
 	end
