@@ -276,12 +276,14 @@ function Library:Init(Config, LibraryParent)
 
 	local function ToggleUI()
 	    Library.UIOpen = not Library.UIOpen
-	            
+		local MouseB = UserInput.MouseBehavior
 	    if Library.UIOpen then
+			MouseB = MouseB
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Transparency = 1}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	    elseif not Library.UIOpen then
+			MouseB = Enum.MouseBehavior.LockCenter
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
 	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Transparency = 0}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,15)}):Play()
