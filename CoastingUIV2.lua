@@ -1,6 +1,9 @@
+local UserInput = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
-local UserInput = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local PlayerService = game:GetService("Players")
+local Mouse = PlayerService.LocalPlayer:GetMouse()
 
 local Library = {
 	LibraryColorTable = {},
@@ -280,11 +283,13 @@ function Library:Init(Config, LibraryParent)
 	    Library.UIOpen = not Library.UIOpen
 	    if Library.UIOpen then
 			Modal.Modal = false
+			Config.Cursor = false
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	    elseif not Library.UIOpen then
 			Modal.Modal = true
+			Config.Cursor = true
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
 	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,15)}):Play()
@@ -511,8 +516,8 @@ function Library:Init(Config, LibraryParent)
 	                TweenService:Create(Button, TweenInfo.new(0.25, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundColor3 = Config.Theme.MainColor}):Play()
 	            end)
 
-	            Button.InputEnded:Connect(function(input)
-	                if input.UserInputType == Enum.UserInputType.MouseMovement then
+	            Button.InputEnded:Connect(function(Input)
+	                if Input.UserInputType == Enum.UserInputType.MouseMovement then
 	                    TweenService:Create(Button, TweenInfo.new(0.25, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundColor3 = Config.Theme.MainColor}):Play()
 	                end
 	            end)
@@ -605,13 +610,13 @@ function Library:Init(Config, LibraryParent)
 				TickCover.Size = UDim2.new(0,14,0,14)
 				TickCover.ZIndex = 5
 
-				local function SetState(state)
-	                if state then
+				local function SetState(State)
+	                if State then
 	                    TweenService:Create(Title, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 	                    TweenService:Create(TickCover, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(0.5, 0, 0.5, 0), Size = UDim2.new(0, 0, 0, 0)}):Play()
 	                    TweenService:Create(CheckboxOutline, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {ImageColor3 = Config.Theme.MainColor}):Play()
 	                    TweenService:Create(CheckboxTicked, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {ImageColor3 = Config.Theme.MainColor}):Play()
-	                elseif not state then
+	                elseif not State then
 	                    TweenService:Create(Title, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {TextColor3 = Color3.fromRGB(185, 185, 185)}):Play()
 	                    TweenService:Create(TickCover, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(0.5, -7, 0.5, -7), Size = UDim2.new(0, 14, 0, 14)}):Play()
 	                    TweenService:Create(CheckboxOutline, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(65, 65, 65)}):Play()
@@ -1193,6 +1198,16 @@ function Library:Init(Config, LibraryParent)
 	    if Input.KeyCode == Config.UIKeybind then
 	        ToggleUI()
 	    end
+	end)
+	local Circle = Drawing.new("Circle")
+	Circle.Transparency = 0
+	Circle.Thickness = 0
+	Circle.Visible = Config.Cursor
+	Circle.Color = Color3.new(1,1,1)
+	Circle.Filled = false
+	Circle.Radius = 5
+	RunService.RenderStepped:Connect(function()
+		Circle.Position = Vector2.new(Mouse.X,Mouse.Y + 37)
 	end)
 	return LibraryInit
 end
