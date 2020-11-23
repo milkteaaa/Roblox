@@ -1202,11 +1202,11 @@ function Library:Init(Config, LibraryParent)
 	local Circle = Drawing.new("Circle")
 	Circle.Transparency = 0
 	Circle.Thickness = 0
-	Circle.Visible = Config.Cursor
 	Circle.Color = Color3.new(1,1,1)
 	Circle.Filled = false
 	Circle.Radius = 5
 	RunService.RenderStepped:Connect(function()
+		Circle.Visible = Config.Cursor
 		Circle.Position = Vector2.new(Mouse.X,Mouse.Y + 37)
 	end)
 	return LibraryInit
