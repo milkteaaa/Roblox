@@ -303,6 +303,18 @@ function Library:Init(Config, LibraryParent)
 	    end
 	end
 
+	UserInput.InputBegan:Connect(function(Input)
+	    if Input.KeyCode == Config.UIKeybind then
+	        ToggleUI()
+	    end
+	end)
+
+	RunService.RenderStepped:Connect(function()
+		--print(Config.Cursor)
+		Circle.Visible = Config.Cursor
+		Circle.Position = Vector2.new(Mouse.X,Mouse.Y + 37)
+	end)
+
 	function LibraryInit:CreateTab(Name)
 		local Tab = Instance.new("ScrollingFrame")
 		local TabContentLayout = Instance.new("UIGridLayout")
@@ -1201,16 +1213,6 @@ function Library:Init(Config, LibraryParent)
 		end
 		return TabElement
 	end
-	UserInput.InputBegan:Connect(function(Input)
-	    if Input.KeyCode == Config.UIKeybind then
-	        ToggleUI()
-	    end
-	end)
-	RunService.RenderStepped:Connect(function()
-		print(Config.Cursor)
-		Circle.Visible = Config.Cursor
-		Circle.Position = Vector2.new(Mouse.X,Mouse.Y + 37)
-	end)
 	return LibraryInit
 end
 
