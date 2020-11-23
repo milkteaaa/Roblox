@@ -46,23 +46,7 @@ local function DarkenObjectColor(Object, Amount)
    
     return Color3.fromRGB(ColorR, ColorG, ColorB)
 end
---[[
-local function SetUIAccent(Color)
-    for _,Element in pairs(Library.LibraryColorTable) do
-        if HasProperty(Element, "BackgroundColor3") then
-            if Element ~= "CheckboxOutline" and Element.ImageColor3 ~= Color3.fromRGB(65, 65, 65) then
-                Element.ImageColor3 = Color
-            end
-        end
 
-        if HasProperty(Element, "TextColor3") then
-            if Element.TextColor3 ~= Color3.fromRGB(255, 255, 255) then
-                Element.TextColor3 = Color
-            end
-        end
-    end
-end
-]]
 local function MakeDraggable(TopbarObject, Object)
     local Dragging = nil
     local DragInput = nil
@@ -249,6 +233,7 @@ function Library:Init(Config, LibraryParent)
 	Modal.TextSize = 15
 	Modal.TextStrokeTransparency = 0.75
 	Modal.TextTransparency = 1
+
 	table.insert(Library.LibraryColorTable, Border)
 	table.insert(Library.LibraryColorTable, TabButtons)
 	MakeDraggable(Topbar, Main)
@@ -311,7 +296,6 @@ function Library:Init(Config, LibraryParent)
 		local TabContentLayout = Instance.new("UIGridLayout")
 		local TabButton = Instance.new("TextButton")
 		local ButtonEnd = Instance.new("Frame")
-		--local TabButtonEnd = Instance.new("TextButton")
 
 		local TabElement = {}
 		Library.TabCount = Library.TabCount + 1
@@ -745,7 +729,6 @@ function Library:Init(Config, LibraryParent)
 				CircleSelector.Position = UDim2.new(1, -10, 0.5, 0)
 				CircleSelector.Size = UDim2.new(0, 20, 0, 20)
 				CircleSelector.ZIndex = 5
-				--AddCorner(CircleSelector, UDim.new(1,0))
 
 				local function Sliding(Input)
 	                local SliderPosition = UDim2.new(math.clamp((Input.Position.X - SliderBackground.AbsolutePosition.X) / SliderBackground.AbsoluteSize.X, 0, 1), 0, 1, 0)
@@ -815,10 +798,390 @@ function Library:Init(Config, LibraryParent)
 				
 			end
 			function SectionElement:CreateDropdown(Name, OptionTable, Preset, Callback)
-				
+				local DropdownHolder = Instance.new("Frame")
+				local TitleToggle = Instance.new("TextButton")
+				local Dropdown = Instance.new("Frame")
+				local DropdownContentLayout = Instance.new("UIListLayout")
+
+				local DropdownToggled = true
+            	local SelectedOption = OptionTable[Preset]
+
+				DropdownHolder.Name = Name .. "Dropdown"
+				DropdownHolder.Parent = SectionContent
+				DropdownHolder.BackgroundColor3 = Color3.fromRGB(0,0,0)
+				DropdownHolder.BackgroundTransparency = 1
+				DropdownHolder.BorderColor3 = Color3.fromRGB(0,0,0)
+				DropdownHolder.BorderSizePixel = 0
+				DropdownHolder.Size = UDim2.new(1,0,0,35)
+				DropdownHolder.ZIndex = 5
+
+				TitleToggle.Name = "TitleToggle"
+				TitleToggle.Parent = DropdownHolder
+				TitleToggle.BackgroundColor3 = Color3.fromRGB(0,0,0)
+				TitleToggle.BackgroundTransparency = 1
+				TitleToggle.BorderColor3 = Color3.fromRGB(0,0,0)
+				TitleToggle.BorderSizePixel = 0
+				TitleToggle.Position = UDim2.new(0,10,0,0)
+				TitleToggle.Size = UDim2.new(1,-10,0,35)
+				TitleToggle.ZIndex = 7
+				TitleToggle.Font = Config.Theme.TextFont
+				TitleToggle.Text = Name .. " - " .. SelectedOption
+				TitleToggle.TextColor3 = Color3.fromRGB(255,255,255)
+				TitleToggle.TextSize = 15
+				TitleToggle.TextStrokeTransparency = 0.75
+				TitleToggle.TextXAlignment = Enum.TextXAlignment.Left
+
+				Dropdown.Name = "Dropdown"
+				Dropdown.Parent = DropdownHolder
+				Dropdown.AnchorPoint = Vector2.new(0.5,0)
+				Dropdown.BackgroundColor3 = Color3.fromRGB(45,45,45)
+				Dropdown.BorderColor3 = Color3.fromRGB(0,0,0)
+				Dropdown.BorderSizePixel = 0
+				Dropdown.Position = UDim2.new(0.5,0,0,35)
+				Dropdown.Size = UDim2.new(1,-20,0,0)
+				Dropdown.ZIndex = 15
+				Dropdown.ClipsDescendants = true
+				AddCorner(Dropdown, UDim.new(0,5))
+
+				DropdownContentLayout.Name = "DropdownContentLayout"
+				DropdownContentLayout.Parent = Dropdown
+				DropdownContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+				local function ResetAllDropdownItems()
+	                for i, v in pairs(Dropdown:GetChildren()) do
+	                    if v:IsA("TextButton") then
+	                        TweenService:Create(v, TweenInfo.new(0.25, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+	                    end
+	                end
+	            end
+
+	            local function ClearAllDropdownItems()
+	                for i, v in pairs(Dropdown:GetChildren()) do
+	                    if v:IsA("TextButton") then
+	                        v:Destroy()
+	                    end
+	                end
+
+	                DropdownToggled = true
+	                TweenService:Create(TitleToggle, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+	                TweenService:Create(DropdownHolder, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 35)}):Play()
+	                TweenService:Create(Dropdown, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, -20, 0, 0)}):Play()
+	            end
+
+	            for _, Button in pairs(OptionTable) do
+	                local DropdownButton = Instance.new("TextButton")
+
+	                DropdownButton.Name = Button .. "DropdownButton"
+					DropdownButton.Parent = Dropdown
+					DropdownButton.BackgroundColor3 = Color3.fromRGB(0,0,0)
+					DropdownButton.BackgroundTransparency = 1
+					DropdownButton.BorderColor3 = Color3.fromRGB(0,0,0)
+					DropdownButton.BorderSizePixel = 0
+					DropdownButton.Size = UDim2.new(1,0,0,25)
+					DropdownButton.ZIndex = 15
+					DropdownButton.AutoButtonColor = false
+					DropdownButton.Font = Enum.Font.SourceSansBold
+					DropdownButton.Text = Button
+					DropdownButton.TextColor3 = Color3.fromRGB(255,255,255)
+					DropdownButton.TextSize = 15
+					DropdownButton.TextStrokeTransparency = 0.75
+
+	                table.insert(Library.LibraryColorTable, DropdownButton)
+
+	                if Button == SelectedOption then
+	                    DropdownButton.TextColor3 = Config.Theme.MainColor
+	                end
+
+	                DropdownButton.MouseButton1Down:Connect(function()
+	                    SelectedOption = Button
+	                    ResetAllDropdownItems()
+	                    TitleToggle.Text = Name .. " - " .. SelectedOption
+	                    TweenService:Create(DropdownButton, TweenInfo.new(0.35, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {TextColor3 = Config.Theme.MainColor}):Play()
+	                    Callback(DropdownButton.Text)
+	                end)
+
+	                DropdownButton.InputBegan:Connect(function(Input)
+	                    if Input.UserInputType == Enum.UserInputType.MouseMovement then
+	                        TweenService:Create(DropdownButton, TweenInfo.new(0.35, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0.95}):Play()
+	                    end
+	                end)
+
+	                DropdownButton.InputEnded:Connect(function(Input)
+	                    if Input.UserInputType == Enum.UserInputType.MouseMovement then
+	                        TweenService:Create(DropdownButton, TweenInfo.new(0.35, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
+	                    end
+	                end)
+	            end
+	            
+	            TitleToggle.MouseButton1Down:Connect(function()
+	                DropdownToggled = not DropdownToggled
+	            
+	                if DropdownToggled then
+	                    TweenService:Create(TitleToggle, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+	                    TweenService:Create(DropdownHolder, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 35)}):Play()
+	                    TweenService:Create(Dropdown, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, -20, 0, 0)}):Play()
+	                elseif not DropdownToggled then
+	                    TweenService:Create(TitleToggle, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {TextColor3 = Color3.fromRGB(185, 185, 185)}):Play()
+	                    TweenService:Create(DropdownHolder, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 35 + DropdownContentLayout.AbsoluteContentSize.Y)}):Play()
+	                    TweenService:Create(Dropdown, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, -20, 0, DropdownContentLayout.AbsoluteContentSize.Y)}):Play()
+	                end
+	            end)
+
+	            local function Refresh(newoptions, newpresetoption, newcallback)
+	                ClearAllDropdownItems()
+
+	                local SelectedOption = newoptions[newpresetoption]
+	                TitleToggle.Text = (Name .. " - " .. SelectedOption)
+
+	                for i, v in pairs(newoptions) do
+	                    local NameButton = Instance.new("TextButton")
+	    
+	                    NameButton.Name = (v .. "Button")
+	                    NameButton.Parent = Dropdown
+	                    NameButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	                    NameButton.BackgroundTransparency = 1.000
+	                    NameButton.BorderSizePixel = 0
+	                    NameButton.Size = UDim2.new(0, 165, 0, 25)
+	                    NameButton.ZIndex = 15
+	                    NameButton.AutoButtonColor = false
+	                    NameButton.Font = Config.Theme.TextFont
+	                    NameButton.Text = v
+	                    NameButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	                    NameButton.TextSize = 15.000
+	    
+	                    if v == SelectedOption then
+	                        NameButton.TextColor3 = Config.Theme.MainColor
+	                    end
+	    
+	                    NameButton.MouseButton1Down:Connect(function()
+	                        SelectedOption = v
+	                        ResetAllDropdownItems()
+	                        TitleToggle.Text = (Name .. " - " .. SelectedOption)
+	                        TweenService:Create(NameButton, TweenInfo.new(0.35, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {TextColor3 = Config.Theme.MainColor}):Play()
+	                        newcallback(NameButton.Text)
+	                    end)
+	    
+	                    NameButton.InputBegan:Connect(function(input)
+	                        if input.UserInputType == Enum.UserInputType.MouseMovement then
+	                            TweenService:Create(NameButton, TweenInfo.new(0.35, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0.95}):Play()
+	                        end
+	                    end)
+	    
+	                    NameButton.InputEnded:Connect(function(input)
+	                        if input.UserInputType == Enum.UserInputType.MouseMovement then
+	                            TweenService:Create(NameButton, TweenInfo.new(0.35, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
+	                        end
+	                    end)
+	                end
+	            end
+
+	            return {
+	                Refresh = Refresh
+	            }
 			end
 			function SectionElement:CreateKeybind(Name, Preset, KeyboardOnly, HoldMode, Callback)
-				
+				local KeybindHolder = Instance.new("Frame")
+				local Title = Instance.new("TextLabel")
+				local Keybind = Instance.new("Frame")
+				local KeybindButton = Instance.new("TextButton")
+
+				local OldBind = Preset.Name
+	            local LoadFromPreset = false
+	            local JustBinded = false
+
+	            local NotAllowedKeys = {
+	                Return = true,
+	                Space = true,
+	                Tab = true,
+	                Unknown = true,
+	                MouseButton1 = true
+	            }
+
+	            local AllowedMouseTypes = {
+	                MouseButton2 = true,
+	                MouseButton3 = true
+	            }
+
+	            local ShortenedNames = {
+	                LeftShift = "LShift",
+	                RightShift = "RShift",
+	                LeftControl = "LCtrl",
+	                RightControl = "RCtrl",
+	                LeftAlt = "LAlt",
+	                RightAlt = "RAlt",
+	                CapsLock = "Caps",
+	                One = "1",
+	                Two = "2",
+	                Three = "3",
+	                Four = "4",
+	                Five = "5",
+	                Six = "6",
+	                Seven = "7",
+	                Eight = "8",
+	                Nine = "9",
+	                Zero = "0",
+	                KeypadOne = "Num-1",
+	                KeypadTwo = "Num-2",
+	                KeypadThree = "Num-3",
+	                KeypadFour = "Num-4",
+	                KeypadFive = "Num-5",
+	                KeypadSix = "Num-6",
+	                KeypadSeven = "Num-7",
+	                KeypadEight = "Num-8",
+	                KeypadNine = "Num-9",
+	                KeypadZero = "Num-0",
+	                Minus = "-",
+	                Equals = "=",
+	                Tilde = "~",
+	                LeftBracket = "[",
+	                RightBracket = "]",
+	                RightParenthesis = ")",
+	                LeftParenthesis = "(",
+	                Semicolon = ";",
+	                Quote = "'",
+	                BackSlash = "\\",
+	                Comma = ",",
+	                Period = ".",
+	                Slash = "/",
+	                Asterisk = "*",
+	                Plus = "+",
+	                --Period = ".",
+	                Backquote = "`",
+	                MouseButton1 = "M1",
+	                MouseButton2 = "M2",
+	                MouseButton3 = "M3"
+	            }
+
+				KeybindHolder.Name = Name .. "Keybind"
+				KeybindHolder.Parent = SectionContent
+				KeybindHolder.BackgroundColor3 = Color3.fromRGB(0,0,0)
+				KeybindHolder.BackgroundTransparency = 1
+				KeybindHolder.BorderColor3 = Color3.fromRGB(0,0,0)
+				KeybindHolder.BorderSizePixel = 0
+				KeybindHolder.Size = UDim2.new(1,0,0,35)
+
+				Title.Name = "Title"
+				Title.Parent = KeybindHolder
+				Title.BackgroundColor3 = Color3.fromRGB(0,0,0)
+				Title.BackgroundTransparency = 1
+				Title.BorderColor3 = Color3.fromRGB(0,0,0)
+				Title.BorderSizePixel = 0
+				Title.Position = UDim2.new(0,10,0,0)
+				Title.Size = UDim2.new(1,-75,1,0)
+				Title.ZIndex = 5
+				Title.Font = Config.Theme.TextFont
+				Title.Text = Name
+				Title.TextColor3 = Color3.fromRGB(255,255,255)
+				Title.TextSize = 15
+				Title.TextStrokeTransparency = 0.75
+				Title.TextXAlignment = Enum.TextXAlignment.Left
+
+				Keybind.Name = "Keybind"
+				Keybind.Parent = KeybindHolder
+				Keybind.AnchorPoint = Vector2.new(1,0.5)
+				Keybind.BackgroundColor3 = Color3.fromRGB(65,65,65)
+				Keybind.BorderColor3 = Color3.fromRGB(0,0,0)
+				Keybind.BorderSizePixel = 0
+				Keybind.Position = UDim2.new(1,-10,0.5,0)
+				Keybind.Size = UDim2.new(0,50,0,20)
+				Keybind.ZIndex = 5
+				AddCorner(Keybind, UDim.new(0,5))
+
+				KeybindButton.Name = "KeybindButton"
+				KeybindButton.Parent = Keybind
+				KeybindButton.BackgroundColor3 = Color3.fromRGB(0,0,0)
+				KeybindButton.BackgroundTransparency = 1
+				KeybindButton.BorderColor3 = Color3.fromRGB(0,0,0)
+				KeybindButton.BorderSizePixel = 0
+				KeybindButton.Size = UDim2.new(1,0,1,0)
+				KeybindButton.ZIndex = 5
+				KeybindButton.AutoButtonColor = false
+				KeybindButton.Font = Config.Theme.TextFont
+				KeybindButton.Text = (ShortenedNames[Preset.Name] or ShortenedNames[Preset] or Preset.Name or "None")
+				KeybindButton.TextColor3 = Color3.fromRGB(255,255,255)
+				KeybindButton.TextSize = 15
+				KeybindButton.TextStrokeTransparency = 0.75
+
+				if LoadFromPreset then
+	                KeybindButton.Text = Preset
+	            end
+
+	            if Preset == Enum.KeyCode.Unknown or Preset == "Unknown" then
+	                KeybindButton.Text = "None"
+	            end
+
+	            KeybindButton.MouseButton1Click:Connect(function()
+	                if Library.CurrentlyBinding then return end
+
+	                KeybindButton.Text = "..."
+
+	                local Input, Bruh = UserInput.InputBegan:wait()
+	                Library.CurrentlyBinding = true
+
+	                if Input.KeyCode.Name == "Backspace" or Input.KeyCode.Name == "Delete" then
+	                    KeybindButton.Text = "None"
+	                    OldBind = Enum.KeyCode.Unknown.Name
+	                    Library.CurrentlyBinding = false
+	                    JustBinded = false
+	                    return
+	                end
+	                
+	                if (Input.UserInputType ~= Enum.UserInputType.Keyboard and (AllowedMouseTypes[Input.UserInputType.Name]) and (not KeyboardOnly)) or (Input.KeyCode and (not NotAllowedKeys[Input.KeyCode.Name])) then
+	                    local BindName = ((Input.UserInputType ~= Enum.UserInputType.Keyboard and Input.UserInputType.Name) or Input.KeyCode.Name)
+	                    KeybindButton.Text = ShortenedNames[BindName] or BindName
+	                    OldBind = BindName
+	                    Library.CurrentlyBinding = false
+	                    JustBinded = true
+	                else
+	                    KeybindButton.Text = ShortenedNames[OldBind] or OldBind
+	                    Library.CurrentlyBinding = false
+	                end
+	            end)
+	            
+	            if not HoldMode then
+	                UserInput.InputBegan:Connect(function(Input, Processed) 
+	                    if not Processed then
+	                        if UserInput:GetFocusedTextBox() then return end
+	                        if OldBind == Enum.KeyCode.Unknown.Name then return end
+	                        if JustBinded then JustBinded = false return end
+
+	                        local BindName = ((Input.UserInputType ~= Enum.UserInputType.Keyboard and Input.UserInputType.Name) or Input.KeyCode.Name)
+
+	                        if BindName == OldBind then 
+	                            Callback(Input.KeyCode.Name)
+	                        end
+	                    end
+	                end)
+	            else
+	                UserInput.InputBegan:Connect(function(Input, Processed) 
+	                    if not Processed then
+	                        if UserInput:GetFocusedTextBox() then return end
+	                        if OldBind == Enum.KeyCode.Unknown.Name then return end
+	                        if JustBinded then JustBinded = false return end
+
+	                        local BindName = ((Input.UserInputType ~= Enum.UserInputType.Keyboard and Input.UserInputType.Name) or Input.KeyCode.Name)
+
+	                        if BindName == OldBind then 
+	                            Callback(true)
+	                        end
+	                    end
+	                end)
+
+	                UserInput.InputEnded:Connect(function(Input, Processed) 
+	                    if not Processed then
+	                        if UserInput:GetFocusedTextBox() then return end
+	                        if OldBind == Enum.KeyCode.Unknown.Name then return end
+	                        if JustBinded then JustBinded = false return end
+
+	                        local HoldModeToggled = false
+	                        local BindName = ((Input.UserInputType ~= Enum.UserInputType.Keyboard and Input.UserInputType.Name) or Input.KeyCode.Name)
+
+	                        if BindName == OldBind then 
+	                            Callback(false)
+	                        end
+	                    end
+	                end)
+	            end
 			end
 			SectionContent.CanvasSize = UDim2.new(0, 0, 0, SectionContentLayout.AbsoluteContentSize.Y + 15)
 			Tab.CanvasSize = UDim2.new(0, 0, 0, TabContentLayout.AbsoluteContentSize.Y + 25)
