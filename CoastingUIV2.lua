@@ -238,7 +238,7 @@ function Library:Init(Config, LibraryParent)
 	Modal.TextStrokeTransparency = 0.75
 	Modal.TextTransparency = 1
 
-	Circle.Transparency = 0
+	Circle.Transparency = 0.75
 	Circle.Thickness = 0
 	Circle.Color = Color3.new(1,1,1)
 	Circle.Filled = false
@@ -310,7 +310,6 @@ function Library:Init(Config, LibraryParent)
 	end)
 
 	RunService.RenderStepped:Connect(function()
-		--print(Config.Cursor)
 		Circle.Visible = Config.Cursor
 		Circle.Position = Vector2.new(Mouse.X,Mouse.Y + 37)
 	end)
