@@ -99,6 +99,7 @@ function Library:Init(Config, LibraryParent)
 	local TabButtons = Instance.new("Frame")
 	local Tabs = Instance.new("Frame")
 	local Modal = Instance.new("TextButton")
+	local Circle = Drawing.new("Circle")
 
 	local LibraryInit = {}
 
@@ -236,6 +237,12 @@ function Library:Init(Config, LibraryParent)
 	Modal.TextSize = 15
 	Modal.TextStrokeTransparency = 0.75
 	Modal.TextTransparency = 1
+
+	Circle.Transparency = 0
+	Circle.Thickness = 0
+	Circle.Color = Color3.new(1,1,1)
+	Circle.Filled = false
+	Circle.Radius = 5
 
 	table.insert(Library.LibraryColorTable, Border)
 	table.insert(Library.LibraryColorTable, TabButtons)
@@ -1199,13 +1206,8 @@ function Library:Init(Config, LibraryParent)
 	        ToggleUI()
 	    end
 	end)
-	local Circle = Drawing.new("Circle")
-	Circle.Transparency = 0
-	Circle.Thickness = 0
-	Circle.Color = Color3.new(1,1,1)
-	Circle.Filled = false
-	Circle.Radius = 5
 	RunService.RenderStepped:Connect(function()
+		print(Config.Cursor)
 		Circle.Visible = Config.Cursor
 		Circle.Position = Vector2.new(Mouse.X,Mouse.Y + 37)
 	end)
