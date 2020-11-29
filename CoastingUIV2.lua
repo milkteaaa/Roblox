@@ -237,12 +237,6 @@ function Library:Init(Config, LibraryParent)
 	Modal.TextStrokeTransparency = 0.75
 	Modal.TextTransparency = 1
 
-	--Circle.Transparency = 0.75
-	--Circle.Thickness = 0
-	--Circle.Color = Color3.new(1,1,1)
-	--Circle.Filled = false
-	--Circle.Radius = 5
-
 	table.insert(Library.LibraryColorTable, Border)
 	table.insert(Library.LibraryColorTable, TabButtons)
 	MakeDraggable(Topbar, Main)
@@ -290,18 +284,26 @@ function Library:Init(Config, LibraryParent)
 		local MouseEnable = UserInput.MouseIconEnabled
 	    if Library.UIOpen then
 			Modal.Modal = false
-			UserInput.MouseIconEnabled = MouseEnable
+			Config.Cursor = MouseEnable
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	    elseif not Library.UIOpen then
 			Modal.Modal = true
-			UserInput.MouseIconEnabled = true
+			Config.Cursor = true
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
 	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,15)}):Play()
 	    end
 	end
+
+	RunService.RenderStepped:Connect(function()
+		if Config.Cursor == true then
+			UserInput.MouseIconEnabled = true
+		else
+			UserInput.MouseIconEnabled = false
+		end
+	end)	
 
 	UserInput.InputBegan:Connect(function(Input)
 	    if Input.KeyCode == Config.UIKeybind then
