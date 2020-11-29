@@ -2,7 +2,7 @@
 
 ## Blackhawk Rescue Mission 5
 ```lua
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/BRM%205.lua"), true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
 ```
 ## CoastingUI V2
 ```lua
