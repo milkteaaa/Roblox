@@ -99,7 +99,6 @@ function Library:Init(Config, LibraryParent)
 	local TabButtons = Instance.new("Frame")
 	local Tabs = Instance.new("Frame")
 	local Modal = Instance.new("TextButton")
-	local Circle = Drawing.new("Circle")
 
 	local LibraryInit = {}
 
@@ -238,11 +237,11 @@ function Library:Init(Config, LibraryParent)
 	Modal.TextStrokeTransparency = 0.75
 	Modal.TextTransparency = 1
 
-	Circle.Transparency = 0.75
-	Circle.Thickness = 0
-	Circle.Color = Color3.new(1,1,1)
-	Circle.Filled = false
-	Circle.Radius = 5
+	--Circle.Transparency = 0.75
+	--Circle.Thickness = 0
+	--Circle.Color = Color3.new(1,1,1)
+	--Circle.Filled = false
+	--Circle.Radius = 5
 
 	table.insert(Library.LibraryColorTable, Border)
 	table.insert(Library.LibraryColorTable, TabButtons)
@@ -288,15 +287,16 @@ function Library:Init(Config, LibraryParent)
 
 	local function ToggleUI()
 	    Library.UIOpen = not Library.UIOpen
+		local MouseEnable = UserInput.MouseIconEnabled
 	    if Library.UIOpen then
 			Modal.Modal = false
-			Config.Cursor = false
+			UserInput.MouseIconEnabled = MouseEnable
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 	    elseif not Library.UIOpen then
 			Modal.Modal = true
-			Config.Cursor = true
+			UserInput.MouseIconEnabled = true
 	        TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
 	        TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
 			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,15)}):Play()
@@ -307,11 +307,6 @@ function Library:Init(Config, LibraryParent)
 	    if Input.KeyCode == Config.UIKeybind then
 	        ToggleUI()
 	    end
-	end)
-
-	RunService.RenderStepped:Connect(function()
-		Circle.Visible = Config.Cursor
-		Circle.Position = Vector2.new(Mouse.X,Mouse.Y + 37)
 	end)
 
 	function LibraryInit:CreateTab(Name)
