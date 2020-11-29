@@ -47,34 +47,3 @@ CoastingUISec:CreateLabel("Main Dev", "coasts @v3rmillion.net coasts#7386 @disco
 CoastingUISec:CreateLabel("V2 Dev", "Alex332Rus @v3rmillion.net AlexR32#3232 @discord.com")
 OtherDevsSec:CreateLabel("Other Dev", "NAME @v3rmillion.net NAME#0000 @discord.com")
 ```
-
-## UILibrary
-```lua
-local UILibrary = loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/UILibrary.lua"), true))()
-
-UILibrary:ChangeName("Epic Library")
-local Main = UILibrary:CreateCategory("Main")
-local Other = UILibrary:CreateCategory("Other")
-local Credits = UILibrary:CreateCategory("Credits")
-
-Main:CreateToggle("Just Toggle", function(Toggle)
-	print(Toggle)
-end)
-
-Main:CreateButton("Just Button", function()
-	print("wow")
-end)
-
-Other:CreateToggle("Infinity Print", function(Toggle)
-	_G.Toggle = Toggle
-	spawn(function()
-		while _G.Toggle do
-			wait()
-			print("Toggled")
-		end
-	end)
-end)
-
-Credits:CreateLabel("UI Lib: AlexR32#3232")
-Credits:CreateLabel("Scripts: AlexR32#3232")
-```
