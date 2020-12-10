@@ -2,6 +2,28 @@
 
 ## Blackhawk Rescue Mission 5
 ```lua
+--[[
+getgenv().Config = {
+   CircleVisible = false,
+   CircleTransparency = 0.25,
+   CircleColor = Color3.new(1,1,1),
+
+   CircleThickness = 1.5,
+   CircleNumSides = 20,
+   CircleFilled = false,
+
+   SilentAim = false,
+   VisibiltyCheck = false,
+   FOV = 100,
+   Distance = 1000,
+   TargetMode = "NPC",
+   HitPart = "Head",
+   FOVMode = "Cursor"
+}
+-- Toggles won't show up as enabled if you toggle them in config
+-- Also this config may be outdated please check github for new loadstring
+-- github.com/AlexR32/Roblox
+]]
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
 ```
 ## CoastingUI V2
