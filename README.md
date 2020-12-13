@@ -2,70 +2,93 @@
 
 ## Blackhawk Rescue Mission 5
 ```lua
---[[
 getgenv().Config = {
-   CircleVisible = false,
-   CircleTransparency = 0.25,
-   CircleColor = Color3.new(1,1,1),
+    CircleEnabled = false,
+    CircleTransparency = 0.25,
+    CircleColor = Color3.new(1,1,1),
 
-   CircleThickness = 1.5,
-   CircleNumSides = 20,
-   CircleFilled = false,
+    CircleThickness = 1.5,
+    CircleNumSides = 30,
+    CircleFilled = false,
 
-   SilentAim = false,
-   VisibiltyCheck = false,
-   FOV = 100,
-   Distance = 1000,
-   TargetMode = "NPC",
-   HitPart = "Head",
-   FOVMode = "Cursor"
+    TracerEnabled = false,
+    TracerTransparency = 0.5,
+    TracerColor = Color3.fromRGB(255,75,75),
+    TracerThickness = 1,
+
+    InfoEnabled = false,
+    InfoDistance = false,
+    InfoPosition = Vector2.new(0,50),
+    InfoTransparency = 1,
+    InfoSize = 20,
+    InfoOutline = false,
+    InfoFont = 1,
+
+    SilentAim = false,
+    VisibiltyCheck = false,
+    FOV = 100,
+    Distance = 1000,
+    TargetMode = "NPC",
+    HitPart = "Head",
+    FOVMode = "Cursor"
 }
 -- Toggles won't show up as enabled if you toggle them in config
--- Also this config may be outdated please check github for new loadstring
 -- github.com/AlexR32/Roblox
-]]
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
 ```
+### Changelog
+	`
+	[+] Added ESP (Tracer, Info)
+	`
 ## CoastingUI V2
 ```lua
 local CoreGui = game:GetService("CoreGui")
 local Config = {
-	Theme = {
-		BackgroundColor = Color3.fromRGB(35,35,35),
-		MainColor = Color3.fromRGB(255,75,75),
-		TextFont = Enum.Font.SourceSansBold,
-		EasingStyle = Enum.EasingStyle.Quart
-	},
-	CheatName = nil,
-	Discord = nil,
-	UIKeybind = Enum.KeyCode.RightShift
+    Theme = {
+        BackgroundColor = Color3.fromRGB(35,35,35),
+        MainColor = Color3.fromRGB(75,75,255),
+        TextFont = Enum.Font.SourceSansBold,
+        EasingStyle = Enum.EasingStyle.Quart
+    },
+    CheatName = nil,
+    Discord = nil,
+    UIKeybind = Enum.KeyCode.RightShift,
+    Cursor = true
 }
-local CoastingCore = loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/CoastingUIV2.lua"), true))()
+
+local CoastingCore = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/CoastingUIV2.lua"))()
 local Coasting = CoastingCore:Init(Config, CoreGui)
 
 local Main = Coasting:CreateTab("Main")
 local Credits = Coasting:CreateTab("Credits")
-local MainSec = Main:CreateSection("Main")
-local OtherSec = Main:CreateSection("Other")
-local Other2Sec = Main:CreateSection("Other 2")
-local CoastingUISec = Credits:CreateSection("CoastingUI Devs")
-local OtherDevsSec = Credits:CreateSection("Other Devs")
+local Settings = Coasting:CreateTab("Settings")
 
-MainSec:CreateButton("Really cool button", function()
-    print("OH YEAH")
+local MainSection = Main:CreateSection("Section")
+local CoastingUISec = Credits:CreateSection("Developers")
+local SettingsSection = Settings:CreateSection("...")
+
+MainSection:CreateLabel("", "Label")
+
+MainSection:CreateButton("Button", function()
+    print("Button")
 end)
 
-MainSec:CreateToggle("Really cool Toggle", function(Boolean)
-    print("OH YEAH " .. tostring(Boolean))
+MainSection:CreateToggle("Toggle", function(Boolean)
+    print(Boolean)
 end)
 
-OtherSec:CreateSlider("Really cool Slider", 0, 100, 50, false, function(Number)
-    print("OH YEAH " .. tostring(Number))
+MainSection:CreateSlider("Slider", 0, 100, 50, false, function(Number)
+    print(Number)
 end)
 
-Other2Sec:CreateLabel("Very nice label", "Did you expect that?")
+MainSection:CreateDropdown("Dropdown", {"Text1","Text2"}, 2, function(String)
+    print(String)
+end)
 
-CoastingUISec:CreateLabel("Main Dev", "coasts @v3rmillion.net coasts#7386 @discord.com")
-CoastingUISec:CreateLabel("V2 Dev", "Alex332Rus @v3rmillion.net AlexR32#3232 @discord.com")
-OtherDevsSec:CreateLabel("Other Dev", "NAME @v3rmillion.net NAME#0000 @discord.com")
+CoastingUISec:CreateLabel("Main Dev", "coasts @v3rmillion.net coasts#7386 @discord.com (Original Version Dev)")
+CoastingUISec:CreateLabel("V2 Dev", "Alex332Rus @v3rmillion.net AlexR32#3232 @discord.com (V2 Dev)")
+
+SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, function(Key)
+    Config.UIKeybind = Enum.KeyCode[Key]
+end)
 ```
