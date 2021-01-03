@@ -40,6 +40,26 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/B
 `
 [+] Added ESP (Tracer, Info)
 `
+## BRM5 ESP Cut
+```lua
+getgenv().Config = {
+    TracerEnabled = false,
+    TracerTransparency = 0.5,
+    TracerColor = Color3.fromRGB(255,75,75),
+    TracerThickness = 1,
+
+    InfoEnabled = false,
+    InfoDistance = false,
+    InfoPosition = Vector2.new(0,50),
+    InfoTransparency = 1,
+    InfoSize = 20,
+    InfoOutline = false,
+    InfoFont = 1,
+}
+-- No UI, no silent aim, only esp
+-- github.com/AlexR32/Roblox
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BRM5ESPCut.lua"))()
+```
 ## CoastingUI V2
 ```lua
 local CoreGui = game:GetService("CoreGui")
