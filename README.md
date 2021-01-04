@@ -93,12 +93,16 @@ MainSection:CreateButton("Button", function()
     print("Button")
 end)
 
-MainSection:CreateToggle("Toggle", function(Boolean)
+MainSection:CreateToggle("Toggle", true, function(Boolean)
     print(Boolean)
 end)
 
 MainSection:CreateSlider("Slider", 0, 100, 50, false, function(Number)
     print(Number)
+end)
+
+MainSection:CreateColorPicker("ColorPicker",Color3.new(1,1,1),function(Color)
+	print(Color)
 end)
 
 MainSection:CreateDropdown("Dropdown", {"Text1","Text2"}, 2, function(String)
@@ -112,3 +116,5 @@ SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, functi
     Config.UIKeybind = Enum.KeyCode[Key]
 end)
 ```
+### Changelog
+`Finnaly added color picker and toggle preset`
