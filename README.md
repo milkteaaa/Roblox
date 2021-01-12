@@ -118,3 +118,22 @@ end)
 ```
 ### Changelog
 `Finally added color picker and toggle preset`
+## TPR:R Hax
+```lua
+_G.Config = {
+    PrimaryColor = Color3.fromRGB(27, 38, 59),
+    SecondaryColor = Color3.fromRGB(13, 27, 42),
+    AccentColor = Color3.fromRGB(41, 115, 115),
+    TextColor =  Color3.new(1,1,1),
+    Font = Enum.Font.Gotham,
+    TextSize = 15,
+    HeaderWidth = 250,
+    HeaderHeight = 30,
+    EntryMargin = 1,
+    AnimationDuration = 0.5,
+    AnimationEasingStyle = Enum.EasingStyle.Linear,
+    DefaultEntryHeight = 35
+}
+
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/TPRRHax.lua"), true))()
+```
