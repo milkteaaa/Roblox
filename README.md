@@ -117,4 +117,4 @@ SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, functi
 end)
 ```
 ### Changelog
-`Finnaly added color picker and toggle preset`
+`Finally added color picker and toggle preset`
