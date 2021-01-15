@@ -5,21 +5,21 @@
 getgenv().Config = {
     CircleEnabled = false,
     CircleTransparency = 0.25,
-    CircleColor = Color3.new(1,1,1),
+    CircleColor = Color3.fromRGB(255,255,255),
 
     CircleThickness = 1.5,
     CircleNumSides = 30,
     CircleFilled = false,
 
     TracerEnabled = false,
-    TracerTransparency = 0.5,
-    TracerColor = Color3.fromRGB(255,75,75),
-    TracerThickness = 1,
+    TracerTransparency = 0.25,
+    TracerColor = Color3.fromRGB(255,0,0),
+    TracerThickness = 2,
 
     InfoEnabled = false,
     InfoDistance = false,
-    InfoPosition = Vector2.new(0,50),
-    InfoTransparency = 1,
+    InfoPosition = Vector2.new(0,25),
+    InfoTransparency = 0.25,
     InfoSize = 20,
     InfoOutline = false,
     InfoFont = 1,
@@ -36,9 +36,9 @@ getgenv().Config = {
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
 ```
 ### Changelog
-```
-[+] Added Circle and Tracer Color Pickers due to UI Lib update
-[+] Added support for toggles in config (toggles now show up as enabled if you toggle them in config)
+```css
+[*] Attemt to fix ESP fps drop (maybe)
+[*] Edited Config
 ```
 ## BRM5 ESP Cut
 ```lua
@@ -117,10 +117,10 @@ SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, functi
 end)
 ```
 ### Changelog
-```
-Fixed Section Titles
-Fixed Slider TextBox not working
-Fixed CornerUI not replicating in keybinds
+```css
+[*] Fixed Section Titles
+[*] Fixed Slider TextBox not working
+[*] Fixed CornerUI not replicating in keybinds
 ```
 ## TPR:R Hax
 ```lua
