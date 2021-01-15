@@ -117,7 +117,11 @@ SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, functi
 end)
 ```
 ### Changelog
-`Finally added color picker and toggle preset`
+```
+Fixed Section Titles
+Fixed Slider TextBox not working
+Fixed CornerUI not replicating in keybinds
+```
 ## TPR:R Hax
 ```lua
 _G.Config = {
