@@ -717,7 +717,7 @@ function Library:Init(Config, LibraryParent)
 						SliderValue.Text = Max
 					end
 		
-					TweenService:Create(SliderIndicator, TweenInfo.new(0.02, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(((tonumber(Value.Text) or Min) - Min) / (Max - Min), 0, 1, 0)}):Play()
+					TweenService:Create(SliderIndicator, TweenInfo.new(0.02, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(((tonumber(SliderValue.Text) or Min) - Min) / (Max - Min), 0, 1, 0)}):Play()
 					Callback(tonumber(SliderValue.Text))
 				end)
 		
@@ -1380,7 +1380,7 @@ function Library:Init(Config, LibraryParent)
 				KeybindButton.TextColor3 = Color3.fromRGB(255,255,255)
 				KeybindButton.TextSize = 15
 				KeybindButton.TextStrokeTransparency = 0.75
-				AddCorner(Keybind, UDim.new(0,5))
+				AddCorner(KeybindButton, UDim.new(0,5))
 
 				if LoadFromPreset then
 					KeybindButton.Text = Preset
