@@ -36,8 +36,8 @@ getgenv().Config = {
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
 ```
 ### Changelog
-* Attemt to fix ESP fps drop (maybe)
-* Edited Config
+* Attempt to fix ESP fps drop (maybe)
+* Config changed
 ## BRM5 ESP Cut
 ```lua
 getgenv().Config = {
