@@ -411,14 +411,12 @@ function Library:Init(Config, LibraryParent)
 			SectionTitle.BorderColor3 = Color3.fromRGB(0,0,0)
 			SectionTitle.BorderSizePixel = 0
 			SectionTitle.Position = UDim2.new(0.5,0,0,0)
-			SectionTitle.Text = Name
-			SectionTitle.TextSize = 15
-			SectionTitle.Size = UDim2.new(0,SectionTitle.TextBounds.X + 5,0,15)
+			SectionTitle.Size = UDim2.new(0,100,0,15)
 			SectionTitle.ZIndex = 4
 			SectionTitle.Font = Config.Theme.TextFont
-			--SectionTitle.Text = Name
+			SectionTitle.Text = Name
 			SectionTitle.TextColor3 = Color3.fromRGB(255,255,255)
-			--SectionTitle.TextSize = 15
+			SectionTitle.TextSize = 15
 			SectionTitle.TextStrokeTransparency = 0.75
 
 			SectionBorder.Name = "SectionBorder"
@@ -454,7 +452,15 @@ function Library:Init(Config, LibraryParent)
 			SectionContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 			SectionContentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-				SectionContent.CanvasSize = UDim2.new(0, 0, 0, SectionContentLayout.AbsoluteContentSize.Y + 15)
+				SectionContent.CanvasSize = UDim2.new(0,0,0,SectionContentLayout.AbsoluteContentSize.Y + 15)
+			end)
+
+			SectionTitle:GetPropertyChangedSignal("TextBounds"):Connect(function()
+				if SectionTitle.Text ~= "" then
+					SectionTitle.Size = UDim2.new(0,SectionTitle.TextBounds.X + 10,0,15)
+				else
+					SectionTitle.Size = UDim2.new(0,0,0,15)
+				end
 			end)
 			
 			function SectionElement:CreateLabel(Name, Text)
@@ -470,11 +476,19 @@ function Library:Init(Config, LibraryParent)
 				Label.Text = Text
 				Label.TextSize = 15
 				Label.TextWrapped = true
-				Label.Size = UDim2.new(1,0,0,Label.TextBounds.Y)
+				Label.Size = UDim2.new(1,0,0,15)
 				Label.ZIndex = 5
 				Label.Font = Config.Theme.TextFont
 				Label.TextColor3 = Color3.fromRGB(255,255,255)
 				Label.TextStrokeTransparency = 0.75
+
+				Label:GetPropertyChangedSignal("TextBounds"):Connect(function()
+					if Label.Text ~= "" then
+						TweenService:Create(Label, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, Label.TextBounds.Y)}):Play()
+					else
+						TweenService:Create(Label, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 0)}):Play()
+					end
+				end)
 			end
 
 			function SectionElement:CreateButton(Name, Callback)
