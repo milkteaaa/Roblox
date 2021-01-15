@@ -36,10 +36,8 @@ getgenv().Config = {
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
 ```
 ### Changelog
-```css
-[*] Attemt to fix ESP fps drop (maybe)
-[*] Edited Config
-```
+* Attemt to fix ESP fps drop (maybe)
+* Edited Config
 ## BRM5 ESP Cut
 ```lua
 getgenv().Config = {
@@ -117,11 +115,9 @@ SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, functi
 end)
 ```
 ### Changelog
-```css
-[*] Fixed Section Titles
-[*] Fixed Slider TextBox not working
-[*] Fixed CornerUI not replicating in keybinds
-```
+* Fixed Section Titles
+* Fixed Slider TextBox not working
+* Fixed CornerUI not replicating in keybinds
 ## TPR:R Hax
 ```lua
 _G.Config = {
