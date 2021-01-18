@@ -42,19 +42,22 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/B
 ```lua
 getgenv().Config = {
     TracerEnabled = false,
-    TracerTransparency = 0.5,
-    TracerColor = Color3.fromRGB(255,75,75),
-    TracerThickness = 1,
+    TracerTransparency = 0.25,
+    TracerColor = Color3.fromRGB(255,0,0),
+    TracerThickness = 2,
 
     InfoEnabled = false,
     InfoDistance = false,
-    InfoPosition = Vector2.new(0,50),
-    InfoTransparency = 1,
-    InfoSize = 20,
+    InfoPosition = Vector2.new(0,25),
+    InfoTransparency = 0.25,
+    InfoSize = 15,
     InfoOutline = false,
     InfoFont = 1,
+
+    Distance = 1000,
+    HitPart = "Head"
 }
--- No UI, no silent aim, only esp
+-- ESP Only
 -- github.com/AlexR32/Roblox
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BRM5ESPCut.lua"))()
 ```
