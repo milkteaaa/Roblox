@@ -3,41 +3,42 @@
 ## Blackhawk Rescue Mission 5
 ```lua
 getgenv().Config = {
-    CircleEnabled = false,
-    CircleTransparency = 0.25,
-    CircleColor = Color3.fromRGB(255,255,255),
+	CircleEnabled = false,
+	CircleTransparency = 0.25,
+	CircleColor = Color3.fromRGB(255,255,255),
 
-    CircleThickness = 1.5,
-    CircleNumSides = 30,
-    CircleFilled = false,
+	CircleThickness = 1.5,
+	CircleNumSides = 30,
+	CircleFilled = false,
 
-    TracerEnabled = false,
-    TracerTransparency = 0.25,
-    TracerColor = Color3.fromRGB(255,0,0),
-    TracerThickness = 2,
+	TracerEnabled = false,
+	TracerTransparency = 0.25,
+	TracerColor = Color3.fromRGB(255,0,0),
+	TracerThickness = 2,
 
-    InfoEnabled = false,
-    InfoDistance = false,
-    InfoPosition = Vector2.new(0,25),
-    InfoTransparency = 0.25,
-    InfoSize = 20,
-    InfoOutline = false,
-    InfoFont = 1,
+	InfoEnabled = false,
+	InfoDistance = false,
+	InfoPosition = Vector2.new(0,25),
+	InfoTransparency = 0.25,
+	InfoSize = 20,
+	InfoOutline = false,
+	InfoFont = 1,
 
-    SilentAim = false,
-    VisibiltyCheck = false,
-    FOV = 100,
-    Distance = 1000,
-    TargetMode = "NPC",
-    HitPart = "Head",
-    FOVMode = "Cursor"
+	SilentAim = false,
+	VisibiltyCheck = false,
+	FieldOfView = 100,
+	Distance = 1000,
+	TargetMode = "NPC",
+	BodyPart = "Head",
+	FieldOfViewMode = "Cursor"
 }
 -- github.com/AlexR32/Roblox
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
 ```
 ### Changelog
-* Attempt to fix ESP fps drop (maybe)
-* Config changed
+* Attempt to fix FPS drop (x2)
+* Config changed (x2)
+* Little rewrite due to fps drop fix
 ## BRM5 ESP Cut
 ```lua
 getgenv().Config = {
