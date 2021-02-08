@@ -66,16 +66,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/B
 ```lua
 local CoreGui = game:GetService("CoreGui")
 local Config = {
-    Theme = {
-        BackgroundColor = Color3.fromRGB(35,35,35),
-        MainColor = Color3.fromRGB(75,75,255),
-        TextFont = Enum.Font.SourceSansBold,
-        EasingStyle = Enum.EasingStyle.Quart
-    },
-    CheatName = nil,
-    Discord = nil,
-    UIKeybind = Enum.KeyCode.RightShift,
-    Cursor = true
+	Theme = {
+		MainColor = Color3.fromRGB(75,75,255),
+		TextFont = Enum.Font.SourceSansBold,
+		EasingStyle = Enum.EasingStyle.Quart
+	},
+	HubName = "CoastingUI", -- nil dont work anymore
+	CustomLabel = "Version: 2.3.5", -- nil dont work anymore
+	UIKeybind = Enum.KeyCode.RightShift
 }
 
 local CoastingCore = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/CoastingUIV2.lua"))()
@@ -111,8 +109,8 @@ MainSection:CreateDropdown("Dropdown", {"Text1","Text2"}, 2, function(String)
     print(String)
 end)
 
-CoastingUISec:CreateLabel("Main Dev", "coasts @v3rmillion.net coasts#7386 @discord.com (Original Version Dev)")
-CoastingUISec:CreateLabel("V2 Dev", "Alex332Rus @v3rmillion.net AlexR32#3232 @discord.com (V2 Dev)")
+CoastingUISec:CreateLabel("Dev1", "coasts @v3rmillion.net coasts#7386 @discord.com (Original Version Dev)")
+CoastingUISec:CreateLabel("Dev2", "Alex332Rus @v3rmillion.net AlexR32#3232 @discord.com (V2 Dev)")
 
 SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, function(Key)
     Config.UIKeybind = Enum.KeyCode[Key]
