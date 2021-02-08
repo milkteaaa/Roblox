@@ -11,7 +11,8 @@ local Library = {
 	FirstTab = nil,
 	CurrentlyBinding = false,
 	RainbowColorValue = 0,
-	HueSelectionPosition = 0
+	HueSelectionPosition = 0,
+	Cursor = true
 }
 
 local function AddCorner(Parent, Radius)
@@ -43,11 +44,7 @@ local function AddPadding(Parent, PaddingLeft, PaddingTop)
 end
 
 local function DarkenObjectColor(Object, Amount)
-	local ColorR = (Object.r * 255) - Amount
-	local ColorG = (Object.g * 255) - Amount
-	local ColorB = (Object.b * 255) - Amount
-   
-	return Color3.fromRGB(ColorR, ColorG, ColorB)
+	return Color3.fromRGB((Object.R * 255) - Amount, (Object.G * 255) - Amount, (Object.B * 255) - Amount)
 end
 
 local function MakeDraggable(TopbarObject, Object)
@@ -55,11 +52,6 @@ local function MakeDraggable(TopbarObject, Object)
 	local DragInput = nil
 	local DragStart = nil
 	local StartPosition = nil
-	
-	local function Update(Input)
-		local Delta = Input.Position - DragStart
-		Object.Position = UDim2.new(StartPosition.X.Scale, StartPosition.X.Offset + Delta.X, StartPosition.Y.Scale, StartPosition.Y.Offset + Delta.Y)
-	end
 	
 	TopbarObject.InputBegan:Connect(function(Input)
 		if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
@@ -83,7 +75,8 @@ local function MakeDraggable(TopbarObject, Object)
 	
 	UserInput.InputChanged:Connect(function(Input)
 		if Input == DragInput and Dragging then
-			Update(Input)
+			local Delta = Input.Position - DragStart
+			Object.Position = UDim2.new(StartPosition.X.Scale, StartPosition.X.Offset + Delta.X, StartPosition.Y.Scale, StartPosition.Y.Offset + Delta.Y)
 		end
 	end)
 end
@@ -93,29 +86,29 @@ function Library:Init(Config, LibraryParent)
 	local Main = Instance.new("Frame")
 	local Border = Instance.new("Frame")
 	local Topbar = Instance.new("Frame")
-	local CheatName = Instance.new("TextLabel")
-	local DiscordInvite = Instance.new("TextLabel")
-	local UITabs = Instance.new("Frame")
-	local TabButtons = Instance.new("Frame")
-	local Tabs = Instance.new("Frame")
+	local HubName = Instance.new("TextLabel")
+	local CustomLabel = Instance.new("TextLabel")
+	local Holder = Instance.new("Frame")
+	local ButtonHolder = Instance.new("Frame")
+	local TabHolder = Instance.new("Frame")
 	local Modal = Instance.new("TextButton")
 
 	local LibraryInit = {}
-
 	UILibrary.Name = HttpService:GenerateGUID(false)
 	UILibrary.Parent = LibraryParent
-	UILibrary.DisplayOrder = 1
+	--UILibrary.DisplayOrder = 1
+	UILibrary.IgnoreGuiInset = true
+	UILibrary.ResetOnSpawn = false
 
 	Main.Name = "Main"
 	Main.Parent = UILibrary
 	Main.AnchorPoint = Vector2.new(0.5,0.5)
-	Main.BackgroundColor3 = Config.Theme.BackgroundColor
+	Main.BackgroundColor3 = Color3.fromRGB(30,30,30)
 	Main.BorderColor3 = Color3.fromRGB(0,0,0)
 	Main.BorderSizePixel = 0
 	Main.Position = UDim2.new(0.5,0,0.5,0)
 	Main.Size = UDim2.new(0,450,0,0)
 	Main.ZIndex = 2
-
 	AddCorner(Main, UDim.new(0,5))
 
 	Border.Name = "Border"
@@ -127,7 +120,6 @@ function Library:Init(Config, LibraryParent)
 	Border.BorderSizePixel = 0
 	Border.Position = UDim2.new(0.5,0,0.5,0)
 	Border.Size = UDim2.new(1,2,1,2)
-
 	AddCorner(Border, UDim.new(0,5))
 
 	Topbar.Name = "Topbar"
@@ -138,89 +130,78 @@ function Library:Init(Config, LibraryParent)
 	Topbar.BorderColor3 = Color3.fromRGB(0,0,0)
 	Topbar.BorderSizePixel = 0
 	Topbar.Position = UDim2.new(0.5,0,0,0)
-	Topbar.Size = UDim2.new(0,450,0,15)
+	Topbar.Size = UDim2.new(1,0,0,20)
 	Topbar.ZIndex = 2
 
-	CheatName.Name = "CheatName"
-	CheatName.Parent = Topbar
-	CheatName.BackgroundColor3 = Color3.fromRGB(0,0,0)
-	CheatName.BackgroundTransparency = 1
-	CheatName.BorderColor3 = Color3.fromRGB(0,0,0)
-	CheatName.BorderSizePixel = 0
-	CheatName.ClipsDescendants = true
-	CheatName.Position = UDim2.new(0,5,0,0)
-	CheatName.Size = UDim2.new(1,-5,1,0)
-	CheatName.ZIndex = 2
-	CheatName.Font = Config.Theme.TextFont
-	if Config.CheatName then
-		CheatName.Text = Config.CheatName .. " - CoastingUI V2"
-	else
-		CheatName.Text = "CoastingUI V2"
-	end
-	CheatName.TextColor3 = Color3.fromRGB(255,255,255)
-	CheatName.TextSize = 13
-	CheatName.TextStrokeTransparency = 0.75
-	CheatName.TextXAlignment = Enum.TextXAlignment.Left
+	HubName.Name = "HubName"
+	HubName.Parent = Topbar
+	HubName.AnchorPoint = Vector2.new(0.5,0)
+	HubName.BackgroundColor3 = Color3.fromRGB(0,0,0)
+	HubName.BackgroundTransparency = 1
+	HubName.BorderColor3 = Color3.fromRGB(0,0,0)
+	HubName.BorderSizePixel = 0
+	HubName.Position = UDim2.new(0.5,0,0,0)
+	HubName.Size = UDim2.new(1,-10,1,0)
+	HubName.ZIndex = 2
+	HubName.ClipsDescendants = true
+	HubName.Font = Config.Theme.TextFont
+	HubName.Text = Config.HubName
+	HubName.TextColor3 = Color3.fromRGB(255,255,255)
+	HubName.TextSize = 15
+	HubName.TextStrokeTransparency = 0.75
+	HubName.TextXAlignment = Enum.TextXAlignment.Left
 
-	DiscordInvite.Name = "DiscordInvite"
-	DiscordInvite.Parent = Topbar
-	DiscordInvite.AnchorPoint = Vector2.new(1,0)
-	DiscordInvite.BackgroundColor3 = Color3.fromRGB(0,0,0)
-	DiscordInvite.BackgroundTransparency = 1
-	DiscordInvite.BorderColor3 = Color3.fromRGB(0,0,0)
-	DiscordInvite.BorderSizePixel = 0
-	DiscordInvite.ClipsDescendants = true
-	DiscordInvite.Position = UDim2.new(1,-5,0,0)
-	DiscordInvite.Size = UDim2.new(1,-5,1,0)
-	DiscordInvite.ZIndex = 2
-	DiscordInvite.Font = Config.Theme.TextFont
-	if Config.Discord then
-		DiscordInvite.Text = "Discord: " .. Config.Discord
-	else
-		DiscordInvite.Text = ""
-	end
-	DiscordInvite.TextColor3 = Color3.fromRGB(255,255,255)
-	DiscordInvite.TextSize = 13
-	DiscordInvite.TextStrokeTransparency = 0.75
-	DiscordInvite.TextXAlignment = Enum.TextXAlignment.Right
+	CustomLabel.Name = "CustomLabel"
+	CustomLabel.Parent = Topbar
+	CustomLabel.AnchorPoint = Vector2.new(0.5,0)
+	CustomLabel.BackgroundColor3 = Color3.fromRGB(0,0,0)
+	CustomLabel.BackgroundTransparency = 1
+	CustomLabel.BorderColor3 = Color3.fromRGB(0,0,0)
+	CustomLabel.BorderSizePixel = 0
+	CustomLabel.Position = UDim2.new(0.5,0,0,0)
+	CustomLabel.Size = UDim2.new(1,-10,1,0)
+	CustomLabel.ZIndex = 2
+	CustomLabel.ClipsDescendants = true
+	CustomLabel.Font = Config.Theme.TextFont
+	CustomLabel.Text = Config.CustomLabel
+	CustomLabel.TextColor3 = Color3.fromRGB(255,255,255)
+	CustomLabel.TextSize = 15
+	CustomLabel.TextStrokeTransparency = 0.75
+	CustomLabel.TextXAlignment = Enum.TextXAlignment.Right
 
-	UITabs.Name = "UITabs"
-	UITabs.Parent = Main
-	UITabs.AnchorPoint = Vector2.new(0.5,0.5)
-	UITabs.BackgroundColor3 = Color3.fromRGB(0,0,0)
-	UITabs.BackgroundTransparency = 1
-	UITabs.BorderColor3 = Color3.fromRGB(0,0,0)
-	UITabs.BorderSizePixel = 0
-	UITabs.ClipsDescendants = true
-	UITabs.Position = UDim2.new(0.5,0,0.5,0)
-	UITabs.Size = UDim2.new(1,0,1,0)
+	Holder.Name = "Holder"
+	Holder.Parent = Main
+	Holder.AnchorPoint = Vector2.new(0.5,0.5)
+	Holder.BackgroundColor3 = Color3.fromRGB(0,0,0)
+	Holder.BackgroundTransparency = 1
+	Holder.BorderColor3 = Color3.fromRGB(0,0,0)
+	Holder.BorderSizePixel = 0
+	Holder.Position = UDim2.new(0.5,0,0.5,0)
+	Holder.Size = UDim2.new(1,0,1,0)
+	Holder.ClipsDescendants = true
 
-	TabButtons.Name = "TabButtons"
-	TabButtons.Parent = UITabs
-	TabButtons.AnchorPoint = Vector2.new(0.5,0)
-	TabButtons.BackgroundColor3 = Config.Theme.MainColor
-	TabButtons.BorderColor3 = Color3.fromRGB(0,0,0)
-	TabButtons.BorderSizePixel = 0
-	TabButtons.Position = UDim2.new(0.5,0,0,15)
-	TabButtons.Size = UDim2.new(1,-15,0,25)
-	TabButtons.ZIndex = 2
+	ButtonHolder.Name = "ButtonHolder"
+	ButtonHolder.Parent = Holder
+	ButtonHolder.AnchorPoint = Vector2.new(0.5,0)
+	ButtonHolder.BackgroundColor3 = Config.Theme.MainColor
+	ButtonHolder.BorderColor3 = Color3.fromRGB(0,0,0)
+	ButtonHolder.BorderSizePixel = 0
+	ButtonHolder.Position = UDim2.new(0.5,0,0,20)
+	ButtonHolder.Size = UDim2.new(1,-15,0,25)
+	ButtonHolder.ZIndex = 2
+	AddCorner(ButtonHolder, UDim.new(0,5))
+	AddListLayout(ButtonHolder, Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder)
 
-	AddListLayout(TabButtons, Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder)
-	AddCorner(TabButtons, UDim.new(0,5))
-
-	Tabs.Name = "Tabs"
-	Tabs.Parent = UITabs
-	Tabs.AnchorPoint = Vector2.new(0.5,0)
-	Tabs.BackgroundColor3 = Color3.fromRGB(0,0,0)
-	Tabs.BackgroundTransparency = 1
-	Tabs.BorderColor3 = Color3.fromRGB(0,0,0)
-	Tabs.BorderSizePixel = 0
-	Tabs.Position = UDim2.new(0.5,0,0,40)
-	Tabs.Size = UDim2.new(1,-15,1,-40)
-	Tabs.ZIndex = 2
-
-	TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
-	TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+	TabHolder.Name = "TabHolder"
+	TabHolder.Parent = Holder
+	TabHolder.AnchorPoint = Vector2.new(0.5,0)
+	TabHolder.BackgroundColor3 = Color3.fromRGB(0,0,0)
+	TabHolder.BackgroundTransparency = 1
+	TabHolder.BorderColor3 = Color3.fromRGB(0,0,0)
+	TabHolder.BorderSizePixel = 0
+	TabHolder.Position = UDim2.new(0.5,0,0,45)
+	TabHolder.Size = UDim2.new(1,-15,1,-45)
+	TabHolder.ZIndex = 2
 
 	Modal.Name = "Modal"
 	Modal.Parent = Main
@@ -239,8 +220,11 @@ function Library:Init(Config, LibraryParent)
 
 	MakeDraggable(Topbar, Main)
 
+	TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
+	TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+
 	local function CloseAllTabs()
-		for _,Tab in pairs(Tabs:GetChildren()) do
+		for _,Tab in pairs(TabHolder:GetChildren()) do
 			if Tab:IsA("ScrollingFrame") then
 				Tab.Visible = false
 			end
@@ -248,7 +232,7 @@ function Library:Init(Config, LibraryParent)
 	end
 
 	local function ResetAllTabButtons()
-		for _,TabButton in pairs(TabButtons:GetChildren()) do
+		for _,TabButton in pairs(ButtonHolder:GetChildren()) do
 			if TabButton:IsA("TextButton") then
 				TweenService:Create(TabButton, TweenInfo.new(0.3, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundColor3 = Config.Theme.MainColor}):Play()
 			end
@@ -256,7 +240,7 @@ function Library:Init(Config, LibraryParent)
 	end
 
 	local function KeepFirstTabOpen()
-		for _,Tab in pairs(Tabs:GetChildren()) do
+		for _,Tab in pairs(TabHolder:GetChildren()) do
 			if Tab:IsA("ScrollingFrame") then
 				if Tab.Name == Library.FirstTab .. "Tab" then
 					Tab.Visible = true
@@ -266,7 +250,7 @@ function Library:Init(Config, LibraryParent)
 			end
 		end
 
-		for _,TabButton in pairs(TabButtons:GetChildren()) do
+		for _,TabButton in pairs(ButtonHolder:GetChildren()) do
 			if TabButton:IsA("TextButton") then
 				if TabButton.Name == Library.FirstTab .. "TabButton" then
 					TweenService:Create(TabButton, TweenInfo.new(0.3, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundColor3 = DarkenObjectColor(Config.Theme.MainColor, 15)}):Play()
@@ -282,16 +266,16 @@ function Library:Init(Config, LibraryParent)
 		local MouseEnable = UserInput.MouseIconEnabled
 		if Library.UIOpen then
 			Modal.Modal = false
-			Config.Cursor = MouseEnable
+			Library.Cursor = MouseEnable
 			TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
 			TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
-			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,0)}):Play()
+			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1,0,0,0)}):Play()
 		elseif not Library.UIOpen then
 			Modal.Modal = true
-			Config.Cursor = true
+			Library.Cursor = true
 			TweenService:Create(Main, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,250)}):Play()
 			TweenService:Create(Border, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
-			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0,450,0,15)}):Play()
+			TweenService:Create(Topbar, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1,0,0,15)}):Play()
 		end
 	end
 
@@ -306,7 +290,7 @@ function Library:Init(Config, LibraryParent)
 		if Library.HueSelectionPosition == 105 then
 			Library.HueSelectionPosition = 0
 		end
-		if Config.Cursor == true then
+		if Library.Cursor == true then
 			UserInput.MouseIconEnabled = true
 		else
 			UserInput.MouseIconEnabled = false
@@ -332,27 +316,24 @@ function Library:Init(Config, LibraryParent)
 		end
 
 		Tab.Name = Name .. "Tab"
-		Tab.Parent = Tabs
-		Tab.Active = true
+		Tab.Parent = TabHolder
+		--Tab.Active = true
 		Tab.BackgroundColor3 = Color3.fromRGB(0,0,0)
 		Tab.BackgroundTransparency = 1
 		Tab.BorderColor3 = Color3.fromRGB(0,0,0)
 		Tab.BorderSizePixel = 0
 		Tab.Size = UDim2.new(1,0,1,0)
 		Tab.ZIndex = 2
-		--Tab.BottomImage = ""
-		--Tab.MidImage = ""
 		Tab.ScrollBarThickness = 0
-		--Tab.TopImage = ""
-
+		TabContentLayout.Name = "TabContentLayout"
 		TabContentLayout.Parent = Tab
 		TabContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		TabContentLayout.CellPadding = UDim2.new(0, 25, 0, 25)
 		TabContentLayout.CellSize = UDim2.new(0, 200, 0, 185)
-		AddPadding(Tab, UDim.new(0,5), UDim.new(0,15))
+		AddPadding(Tab, UDim.new(0,5), UDim.new(0,10))
 		
 		TabButton.Name = Name .. "TabButton"
-		TabButton.Parent = TabButtons
+		TabButton.Parent = ButtonHolder
 		TabButton.BackgroundColor3 = Config.Theme.MainColor
 		TabButton.BackgroundTransparency = 1
 		TabButton.BorderColor3 = Color3.fromRGB(0,0,0)
@@ -398,7 +379,7 @@ function Library:Init(Config, LibraryParent)
 
 			Section.Name = Name .. "Section"
 			Section.Parent = Tab
-			Section.BackgroundColor3 = Config.Theme.BackgroundColor
+			Section.BackgroundColor3 = Color3.fromRGB(30,30,30)
 			Section.BorderColor3 = Color3.fromRGB(0,0,0)
 			Section.BorderSizePixel = 0
 			Section.Size = UDim2.new(0,100,0,100)
@@ -407,7 +388,7 @@ function Library:Init(Config, LibraryParent)
 			SectionTitle.Name = "SectionTitle"
 			SectionTitle.Parent = Section
 			SectionTitle.AnchorPoint = Vector2.new(0.5,0.5)
-			SectionTitle.BackgroundColor3 = Config.Theme.BackgroundColor
+			SectionTitle.BackgroundColor3 = Color3.fromRGB(30,30,30)
 			SectionTitle.BorderColor3 = Color3.fromRGB(0,0,0)
 			SectionTitle.BorderSizePixel = 0
 			SectionTitle.Position = UDim2.new(0.5,0,0,0)
@@ -441,7 +422,7 @@ function Library:Init(Config, LibraryParent)
 			SectionContent.BorderColor3 = Color3.fromRGB(0,0,0)
 			SectionContent.BorderSizePixel = 0
 			SectionContent.Position = UDim2.new(0,0,1,0)
-			SectionContent.Size = UDim2.new(1,0,1,-5)
+			SectionContent.Size = UDim2.new(1,0,1,-10)
 			SectionContent.ZIndex = 4
 			SectionContent.BottomImage = ""
 			SectionContent.MidImage = ""
@@ -483,12 +464,12 @@ function Library:Init(Config, LibraryParent)
 				Label.TextStrokeTransparency = 0.75
 
 				Label:GetPropertyChangedSignal("TextBounds"):Connect(function()
-					if Label.Text ~= "" then
-						TweenService:Create(Label, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, Label.TextBounds.Y)}):Play()
-					else
-						TweenService:Create(Label, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 0)}):Play()
-					end
-				end)
+	                if Label.Text ~= "" then
+	                    TweenService:Create(Label, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, Label.TextBounds.Y)}):Play()
+	                else
+	                    TweenService:Create(Label, TweenInfo.new(0.5, Config.Theme.EasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 0)}):Play()
+	                end
+            	end)
 			end
 
 			function SectionElement:CreateButton(Name, Callback)
@@ -604,7 +585,7 @@ function Library:Init(Config, LibraryParent)
 
 				TickCover.Name = "TickCover"
 				TickCover.Parent = Toggle
-				TickCover.BackgroundColor3 = Config.Theme.BackgroundColor
+				TickCover.BackgroundColor3 = Color3.fromRGB(30,30,30)
 				TickCover.BorderColor3 = Color3.fromRGB(0,0,0)
 				TickCover.BorderSizePixel = 0
 				TickCover.Position = UDim2.new(0.5,-7,0.5,-7)
@@ -1008,7 +989,7 @@ function Library:Init(Config, LibraryParent)
 
 				TickCover.Name = "TickCover"
 				TickCover.Parent = Toggle
-				TickCover.BackgroundColor3 = Color3.fromRGB(35,35,35)
+				TickCover.BackgroundColor3 = Color3.fromRGB(30,30,30)
 				TickCover.BorderColor3 = Color3.fromRGB(0,0,0)
 				TickCover.BorderSizePixel = 0
 				TickCover.Position = UDim2.new(0.5,-7,0.5,-7)
