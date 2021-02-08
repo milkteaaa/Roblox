@@ -71,8 +71,8 @@ local Config = {
 		TextFont = Enum.Font.SourceSansBold,
 		EasingStyle = Enum.EasingStyle.Quart
 	},
-	HubName = "CoastingUI", -- nil dont work anymore
-	CustomLabel = "Version: 2.3.5", -- nil dont work anymore
+	HubName = "CoastingUI", -- nil dont work anymore, use ""
+	CustomLabel = "Version: 2.3.5", -- nil dont work anymore, use ""
 	UIKeybind = Enum.KeyCode.RightShift
 }
 
@@ -117,9 +117,7 @@ SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, functi
 end)
 ```
 ### Changelog
-* Fixed Section Titles
-* Fixed Slider TextBox not working
-* Fixed CornerUI not replicating in keybinds
+* Rewrited some things
 ## TPR:R Hax
 ```lua
 _G.Config = {
