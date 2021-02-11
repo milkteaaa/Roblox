@@ -6,7 +6,6 @@ getgenv().Config = {
 	CircleEnabled = false,
 	CircleTransparency = 0.25,
 	CircleColor = Color3.fromRGB(255,255,255),
-
 	CircleThickness = 1.5,
 	CircleNumSides = 30,
 	CircleFilled = false,
@@ -120,20 +119,28 @@ end)
 * Rewrited some things
 ## TPR:R Hax
 ```lua
-_G.Config = {
-    PrimaryColor = Color3.fromRGB(27, 38, 59),
-    SecondaryColor = Color3.fromRGB(13, 27, 42),
-    AccentColor = Color3.fromRGB(41, 115, 115),
+getgenv().Config = {
+    PrimaryColor = Color3.fromRGB(50, 50, 100),
+    SecondaryColor = Color3.fromRGB(25, 25, 50),
+    AccentColor = Color3.fromRGB(15, 15, 25),
     TextColor =  Color3.new(1,1,1),
-    Font = Enum.Font.Gotham,
-    TextSize = 15,
+    Font = Enum.Font.SourceSansSemibold,
+    TextSize = 18,
     HeaderWidth = 250,
-    HeaderHeight = 30,
+    HeaderHeight = 35,
     EntryMargin = 1,
     AnimationDuration = 0.5,
     AnimationEasingStyle = Enum.EasingStyle.Linear,
-    DefaultEntryHeight = 35
+    DefaultEntryHeight = 45,
+
+    SoundId = 142376088,
+    Volume = 0.5,
+    Type = "Looping",
+    Pitch = 1,
+
+    RC = false, -- don't touch it
+    AF = false -- don't touch it
 }
 
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/TPRRHax.lua"), true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/TPRRHax.lua"))()
 ```
