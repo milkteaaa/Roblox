@@ -1,6 +1,6 @@
 local Workspace = game:GetService("Workspace")
 local PlayerService = game:GetService("Players")
-local RobloxGui = game:GetService("CoreGui")
+local CoreGui = game:GetService("CoreGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Player = PlayerService.LocalPlayer
 
@@ -10,27 +10,46 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 10
 })
 
-local DefaultConfig = {
-    PrimaryColor = Color3.fromRGB(50, 50, 100),
-    SecondaryColor = Color3.fromRGB(25, 25, 50),
-    AccentColor = Color3.fromRGB(15, 15, 25),
-    TextColor =  Color3.new(1,1,1),
-    Font = Enum.Font.SourceSansSemibold,
-    TextSize = 18,
-    HeaderWidth = 250,
-    HeaderHeight = 35,
-    EntryMargin = 1,
-    AnimationDuration = 0.5,
-    AnimationEasingStyle = Enum.EasingStyle.Linear,
-    DefaultEntryHeight = 45
+local PartTable = {
+    "Head",
+    "Torso",
+    "Left Arm",
+    "Right Arm",
+    "Left Leg",
+    "Left Right"
 }
 
-if _G.Config == nil then
-    _G.Config = DefaultConfig
+function RandomColor3()
+	return Color3.new(Random.new():NextNumber(0,1),Random.new():NextNumber(0,1),Random.new():NextNumber(0,1))
+end
+
+if not getgenv().Config then
+    getgenv().Config = {
+        PrimaryColor = Color3.fromRGB(50, 50, 100),
+        SecondaryColor = Color3.fromRGB(25, 25, 50),
+        AccentColor = Color3.fromRGB(15, 15, 25),
+        TextColor =  Color3.new(1,1,1),
+        Font = Enum.Font.SourceSansSemibold,
+        TextSize = 18,
+        HeaderWidth = 250,
+        HeaderHeight = 35,
+        EntryMargin = 1,
+        AnimationDuration = 0.5,
+        AnimationEasingStyle = Enum.EasingStyle.Linear,
+        DefaultEntryHeight = 45,
+
+        SoundId = 142376088,
+        Volume = 0.5,
+        Type = "Looping",
+        Pitch = 1,
+
+        RC = false,
+        AF = false
+    }
 end
 
 local DropLibCore = loadstring(game:HttpGet("https://gitlab.com/0x45.xyz/droplib/-/raw/master/drop-minified.lua"))()
-local DropLib = DropLibCore:Init(_G.Config, RobloxGui)
+local DropLib = DropLibCore:Init(getgenv().Config, CoreGui)
 
 local Main = DropLib:CreateCategory("Main")
 local Sound = Main:CreateSection("Sound")
@@ -39,6 +58,7 @@ local Misc = Main:CreateSection("Misc")
 
 local Achievement = DropLib:CreateCategory("Achievements")
 local Lobby = Achievement:CreateSection("Lobby")
+local Glitchworld = Achievement:CreateSection("Glitchworld")
 local FNAF = Achievement:CreateSection("FNAF")
 local FNAF2 = Achievement:CreateSection("FNAF 2")
 local FNAF3 = Achievement:CreateSection("FNAF 3")
@@ -53,46 +73,46 @@ local LibMenu = DropLib:CreateCategory("DropLib")
 local LibConfig = LibMenu:CreateSection("Config")
 
 Sound:CreateTextBox("SoundId", function(SoundId)
-    _G.SoundId = SoundId
+    getgenv().Config.SoundId = SoundId
 end, nil, true, "142376088")
 
 Sound:CreateSlider("Volume", function(Volume)
-    _G.Volume = Volume
+    getgenv().Config.Volume = Volume
 end, 0, 10, 0.5, true, 0.5)
 
 Sound:CreateSlider("Pitch", function(Pitch)
-    _G.Pitch = Pitch
+    getgenv().Config.Pitch = Pitch
 end, 0, 20, 0.25, true, 1)
 
 Sound:CreateSelector("Type", function(Type)
-    _G.Type = Type
+    getgenv().Config.Type = Type
 end, function(GetType)
     return {"PlayOnce", "Looping"}
 end, "Looping")
 
 Sound:CreateButton("Play Sound", function()
-    if _G.SoundId == nil then
-        _G.SoundId = "142376088"
+    if getgenv().Config.SoundId == nil then
+        getgenv().Config.SoundId = 142376088
         print("TPRR Hax | SoundId Set To Default")
     end
-    if _G.Volume == nil then
-        _G.Volume = 0.5
+    if getgenv().Config.Volume == nil then
+        getgenv().Config.Volume = 0.5
         print("TPRR Hax | Volume Set To Default")
     end
-    if _G.Pitch == nil then
-        _G.Pitch = 1
-        print("TPRR Hax | Pitch Set To Default")
-    end
-    if _G.Type == nil then
-        _G.Type = "Looping"
+    if getgenv().Config.Type == nil then
+        getgenv().Config.Type = "Looping"
         print("TPRR Hax | Type Set To Default")
     end
-    ReplicatedStorage.Events.AnimatronicSound:FireServer("AlexR32#2514 Was Here", _G.SoundId, _G.Volume, _G.Type, _G.Pitch)
-    print("TPRR Hax | Sound Playing | SoundId: " .. _G.SoundId, "Volume: " .. _G.Volume, "Pitch: " .. _G.Pitch, "Type: " .. _G.Type)
+    if getgenv().Config.Pitch == nil then
+        getgenv().Config.Pitch = 1
+        print("TPRR Hax | Pitch Set To Default")
+    end
+    ReplicatedStorage.Events.AnimatronicSound:FireServer("AlexR32 Was Here", getgenv().Config.SoundId, getgenv().Config.Volume, getgenv().Config.Type, getgenv().Config.Pitch)
+    print("TPRR Hax | Sound Playing | SoundId: " .. getgenv().Config.SoundId, "Volume: " .. getgenv().Config.Volume, "Pitch: " .. getgenv().Config.Pitch, "Type: " .. getgenv().Config.Type)
 end)
 
 Sound:CreateButton("Stop Sound", function()
-    ReplicatedStorage.Events.AnimatronicSoundLoopStop:FireServer("AlexR32#2514 Was Here")
+    ReplicatedStorage.Events.AnimatronicSoundLoopStop:FireServer("AlexR32 Was Here")
     print("TPRR Hax | Sound Stopped")
 end)
 
@@ -116,19 +136,36 @@ if game.PlaceId ~= 373513488 then
         print("TPRR Hax | Description: " .. Description)
     end, nil, true, nil)
 
-    Misc:CreateSwitch("Tape AutoFarm", function(TAF)
-        _G.TAF = TAF
-        spawn(function()
-            while _G.TAF do
-                wait(0.5)
-                for I,Tape in pairs(Workspace:GetChildren()) do
-                    if Tape:IsA("Part") and Tape.Name == "Tape" then
-                        local PlayerRootPart = Player.Character.HumanoidRootPart
-                        Tape.CFrame = PlayerRootPart.CFrame
-                    end
+    Misc:CreateSwitch("Rainbow Character", function(RC)
+        getgenv().Config.RC = RC
+        while getgenv().Config.RC do
+            wait(0.25)
+            for Index,Part in pairs(PartTable) do
+                Workspace.BodyColorChanger:FireServer(Part,RandomColor3())
+            end
+        end
+    end)
+
+    Misc:CreateSwitch("Tape AutoFarm", function(AF)
+        getgenv().Config.AF = AF
+        while getgenv().Config.AF do
+            wait(0.5)
+            for Index,Part in pairs(Workspace:GetChildren()) do
+                if Part:IsA("Part") and Part.Name == "PotOGold" then
+                    local PlayerRootPart = Player.Character.HumanoidRootPart
+                    Part.CFrame = PlayerRootPart.CFrame
+                elseif Part:IsA("Part") and Part.Name == "Egg" then
+                    local PlayerRootPart = Player.Character.HumanoidRootPart
+                    Part.CFrame = PlayerRootPart.CFrame
+                elseif Part:IsA("Part") and Part.Name == "Gift" then
+                    local PlayerRootPart = Player.Character.HumanoidRootPart
+                    Part.CFrame = PlayerRootPart.CFrame
+                elseif Part:IsA("Part") and Part.Name == "Tape" then
+                    local PlayerRootPart = Player.Character.HumanoidRootPart
+                    Part.CFrame = PlayerRootPart.CFrame
                 end
             end
-        end) 
+        end
     end)
 elseif game.PlaceId == 373513488 then
     Bio:CreateTextLabel("This Section Does Not Work\nIn The Lobby")
@@ -149,7 +186,13 @@ if game.PlaceId == 373513488 then
 elseif game.PlaceId ~= 373513488 then
     Lobby:CreateTextLabel("This Section Only For Lobby")
 end
-
+if game.PlaceId == 1674513925 then
+    Glitchworld:CreateButton("Unlock \"*Heya\" Badge", function()
+        Workspace.SongHandler:FireServer("Megalovania")
+    end)
+elseif game.PlaceId ~= 1674513925 then
+    Glitchworld:CreateTextLabel("This Section Only For Glitchworld")
+end
 if game.PlaceId == 599951915 then
     FNAF:CreateButton("Unlock Hitbox Badges", function()
         local Character = Player.Character
@@ -253,64 +296,64 @@ LibCreator:CreateTextLabel("cheb45 @ v3rmillion.net")
 LibCreator:CreateTextLabel("cheb#5214 @ discord.com")
 
 ScriptCreator:CreateTextLabel("Alex332Rus @ v3rmillion.net")
-ScriptCreator:CreateTextLabel("AlexR32#2514 @ discord.com")
+ScriptCreator:CreateTextLabel("AlexR32#6862 @ discord.com")
 
 LibConfig:CreateColorPicker("Primary Color", function(Color)
-    _G.Config.PrimaryColor = Color
-end, true, _G.Config.PrimaryColor)
+    getgenv().Config.PrimaryColor = Color
+end, true, getgenv().Config.PrimaryColor)
 
 LibConfig:CreateColorPicker("Secondary Color", function(Color)
-    _G.Config.SecondaryColor = Color
-end, true, _G.Config.SecondaryColor)
+    getgenv().Config.SecondaryColor = Color
+end, true, getgenv().Config.SecondaryColor)
 
 LibConfig:CreateColorPicker("Accent Color", function(Color)
-    _G.Config.AccentColor = Color
-end, true, _G.Config.AccentColor)
+    getgenv().Config.AccentColor = Color
+end, true, getgenv().Config.AccentColor)
 
 LibConfig:CreateColorPicker("Text Color", function(Color)
-    _G.Config.TextColor = Color
-end, true, _G.Config.TextColor)
+    getgenv().Config.TextColor = Color
+end, true, getgenv().Config.TextColor)
 
 LibConfig:CreateSelector("Text Font", function(Font)
-    _G.Config.Font = Enum.Font[Font]
+    getgenv().Config.Font = Enum.Font[Font]
 end, function(GetFont)
     return {"Legacy","Arial","ArialBold","SourceSans","SourceSansBold","SourceSansSemibold","SourceSansLight","SourceSansItalic","Bodoni","Garamond","Cartoon","Code","Highway","SciFi","Arcade","Fantasy","Antique","Gotham","GothamSemibold","GothamBold","GothamBlack"}
-end, string.sub(tostring(_G.Config.Font),11))
+end, string.sub(tostring(getgenv().Config.Font),11))
 
 LibConfig:CreateSlider("Text Size", function(Size)
-    _G.Config.TextSize = Size
-end, 0, 100, 1, true, _G.Config.TextSize)
+    getgenv().Config.TextSize = Size
+end, 0, 100, 1, true, getgenv().Config.TextSize)
 
 LibConfig:CreateSlider("Header Width", function(Size)
-    _G.Config.HeaderWidth = Size
-end, 0, 500, 1, true, _G.Config.HeaderWidth)
+    getgenv().Config.HeaderWidth = Size
+end, 0, 500, 1, true, getgenv().Config.HeaderWidth)
 
 LibConfig:CreateSlider("Header Height", function(Size)
-    _G.Config.HeaderHeight = Size
-end, 0, 100, 1, true, _G.Config.HeaderHeight)
+    getgenv().Config.HeaderHeight = Size
+end, 0, 100, 1, true, getgenv().Config.HeaderHeight)
 
 LibConfig:CreateSlider("Entry Margin", function(Size)
-    _G.Config.EntryMargin = Size
-end, 0, 100, 1, true, _G.Config.EntryMargin)
+    getgenv().Config.EntryMargin = Size
+end, 0, 100, 1, true, getgenv().Config.EntryMargin)
 
 LibConfig:CreateSlider("Animation Duration", function(Time)
-    _G.Config.AnimationDuration = Time
-end, 0, 2, 0.1, true, _G.Config.AnimationDuration)
+    getgenv().Config.AnimationDuration = Time
+end, 0, 2, 0.1, true, getgenv().Config.AnimationDuration)
 
 LibConfig:CreateSelector("Animation Easing Style", function(EasingStyle)
-    _G.Config.AnimationEasingStyle = Enum.EasingStyle[EasingStyle]
+    getgenv().Config.AnimationEasingStyle = Enum.EasingStyle[EasingStyle]
 end, function(GetEasingStyle)
     return {"Linear", "Sine","Quad","Quart","Quint"}
-end, string.sub(tostring(_G.Config.AnimationEasingStyle),18))
+end, string.sub(tostring(getgenv().Config.AnimationEasingStyle),18))
 
 --[[
 LibConfig:CreateSlider("Entry Height", function(Size)
-    _G.Config.DefaultEntryHeight = Size
-end, 0, 100, 1, true, _G.Config.DefaultEntryHeight)
+    getgenv().Config.DefaultEntryHeight = Size
+end, 0, 100, 1, true, getgenv().Config.DefaultEntryHeight)
 ]]
 
 LibConfig:CreateButton("Update Config", function()
-    DropLib:LoadConfig(_G.Config)
+    DropLib:LoadConfig(getgenv().Config)
     DropLib:RecursiveUpdateGui()
 end)
 
@@ -319,4 +362,4 @@ LibMenu:CreateButton("Destroy", function()
 end)
 
 -- https://gitlab.com/0x45.xyz/droplib
--- loadstring(game:HttpGet(("https://raw.githubusercontent.com/AlexR32/Roblox/main/TPRRHax.lua"), true))()
+--loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/TPRRHax.lua"))()
