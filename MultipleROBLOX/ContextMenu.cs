@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using MultipleROBLOX.Properties;
 
 namespace MultipleROBLOX
 {
@@ -14,6 +15,7 @@ namespace MultipleROBLOX
 
 			Item = new ToolStripMenuItem();
 			Item.Text = "Multiple ROBLOX";
+			Item.Image = Resources.ProgramImage;
 			Item.Enabled = false;
 			Menu.Items.Add(Item);
 
