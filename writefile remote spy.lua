@@ -1,41 +1,116 @@
-assert(writefile, "Your exploit doesn't support writefile")
-assert((setreadonly or make_writeable), "Your exploit doesn't support setreadonly or make_writeable")
-assert((getnamecallmethod or get_namecall_method), "Your exploit doesn't support getnamecallmethod or get_namecall_method")
-assert(getrawmetatable, "Your exploit doesn't support getrawmetatable")
+local logtable = {"Remote Log Started - " .. os.date("%c")}
 
-local LogTable = {}
+local SpecialCharacters = {
+	['\a'] = '\\a', 
+	['\b'] = '\\b', 
+	['\f'] = '\\f', 
+	['\n'] = '\\n', 
+	['\r'] = '\\r', 
+	['\t'] = '\\t', 
+	['\v'] = '\\v', 
+	['\0'] = '\\0'
+}
+local Keywords = { 
+	['and'] = true, 
+	['break'] = true, 
+	['do'] = true, 
+	['else'] = true, 
+	['elseif'] = true, 
+	['end'] = true, 
+	['false'] = true, 
+	['for'] = true, 
+	['function'] = true, 
+	['if'] = true, 
+	['in'] = true, 
+	['local'] = true, 
+	['nil'] = true, 
+	['not'] = true, 
+	['or'] = true, 
+	['repeat'] = true, 
+	['return'] = true, 
+	['then'] = true, 
+	['true'] = true, 
+	['until'] = true, 
+	['while'] = true, 
+	['continue'] = true
+}
+
+local function GetFullName(Object)
+	local Hierarchy = {}
+
+	local ChainLength = 1
+	local Parent = Object
+	
+	while Parent do
+		Parent = Parent.Parent
+		ChainLength = ChainLength + 1
+	end
+
+	Parent = Object
+	local Num = 0
+	while Parent do
+		Num = Num + 1
+
+		local ObjName = string.gsub(Parent.Name, '[%c%z]', SpecialCharacters)
+		ObjName = Parent == game and 'game' or ObjName
+
+		if Keywords[ObjName] or not string.match(ObjName, '^[_%a][_%w]*$') then
+			ObjName = '["' .. ObjName .. '"]'
+		elseif Num ~= ChainLength - 1 then
+			ObjName = '.' .. ObjName
+		end
+
+		Hierarchy[ChainLength - Num] = ObjName
+		Parent = Parent.Parent
+	end
+
+	return table.concat(Hierarchy)
+end
+
+function formatargs(args,showkeys)
+    if #args == 0 then return "N/A" end
+    local strargs = {}
+    for k,v in next,args do
+        local argstr = ""
+        if type(v) == "string" then
+            argstr = "\"" .. v .. "\""
+        elseif typeof(v) == "Instance" then
+            argstr = "game."..v:GetFullName()
+        elseif type(v) == "table" then
+            argstr = "{" .. formatargs(v,true) .. "}"
+        else
+            argstr = tostring(v)
+        end
+        if showkeys and type(k) ~= "number" then
+            table.insert(strargs,k.."="..argstr)
+        else
+            table.insert(strargs,argstr)
+        end
+    end
+    return table.concat(strargs, ", ")
+end
+
+local function remotelog(event, namecallmethod, script, args)
+    table.insert(logtable, #logtable + 1, event.ClassName .. " called! - " .. os.date("%c") .. "\nPath: " .. GetFullName(event) .. "\nFrom Script: " .. GetFullName(script) .. "\nArguments: " .. formatargs(args) .. "\nRuns As: " .. GetFullName(event) .. ":" .. namecallmethod .. "(" .. formatargs(args) .. ")")
+end
 game.Players.PlayerRemoving:Connect(function(Player)
     if Player == game.Players.LocalPlayer then
-        writefile("Remote Spy.txt", table.concat(LogTable,"\n"))
+        table.insert(logtable, #logtable + 1, "Remote Log Ended - " .. os.date("%c"))
+        writefile("Remote Log.txt", table.concat(logtable,"\n\n"))
     end
 end)
 
-local meta = getrawmetatable(game)
-local old = meta.__namecall
+local rawmetatable = getrawmetatable(game)
+local namecall = rawmetatable.__namecall
+setreadonly(rawmetatable, false)
 
-if setreadonly then
-	setreadonly(meta, false)
-else
-	make_writeable(meta, true)
-end
-
-local callMethod = getnamecallmethod or get_namecall_method
-local newClosure = newcclosure or function(f)
-	return f
-end
-
-meta.__namecall = newClosure(function(Event, ...)
-	local cmethod = callMethod()
-    local fmethod = (tostring(cmethod) == "FireServer") or (tostring(cmethod) == "InvokeServer") or nil
-	local arguments = {...}
-	if fmethod then
-        table.insert(LogTable, #LogTable + 1, tostring(Event)..":"..tostring(cmethod).." => "..table.unpack(arguments))
+rawmetatable.__namecall = newcclosure(function(event, ...)
+    local namecallmethod = getnamecallmethod()
+    local script = getcallingscript()
+    local args = {...}
+    if namecallmethod == "FireServer" or namecallmethod == "InvokeServer" then
+        remotelog(event, namecallmethod, script, args)
     end
-	return old(Event, ...)
+    return namecall(event, ...)
 end)
-
-if setreadonly then
-	setreadonly(meta, true)
-else
-	make_writeable(meta, false)
-end
+setreadonly(rawmetatable, true)
