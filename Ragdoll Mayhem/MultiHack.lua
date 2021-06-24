@@ -10,7 +10,7 @@ local PlayerFolder = Workspace.Characters
 if not getgenv().Config then
 getgenv().Config = {
 
-	-- Visuals
+	-- fov circle
 	CircleVisible = true,
 	CircleTransparency = 1,
 	CircleColor = Color3.fromRGB(255,128,255),
@@ -18,29 +18,33 @@ getgenv().Config = {
 	CircleNumSides = 30,
 	CircleFilled = false,
 
+	-- box, player names and health bar (not really useful for this game)
 	OutlineVisible = true,
 	TextVisible = true,
 	HealthbarVisible = false,
 	BoxVisible = true,
 
-	Transparency = 1,
-	Color = Color3.fromRGB(255,128,255),
-	Thickness = 2,
-	Filled = false,
+	Transparency = 1, -- yes
+	Color = Color3.fromRGB(255,128,255), -- disable rainbow before using
+	Thickness = 2, -- very buggy when health bar is on and thickness 5+
+	Filled = false, -- not really useful
 
-	Rainbow = false,
+	Rainbow = false, -- rainbow boxes yay
+
+	-- dont touch it or esp wont work
 	PlayerPart = "Torso",
 	ModelPart = "Torso",
 
 	-- Aimbot
 	Aimbot = true,
 	Sensitivity = 0.5,
-
+	-- SilentAim
 	SilentAim = false,
+	--Things related to aim and silent aim
 	TeamCheck = false,
-	FieldOfView = 100, -- SilentAim and Aimbot
-	Distance = 1000, -- ESP, SilentAim and Aimbot
-	BodyPart = "Head" -- SilentAim and Aimbot
+	FieldOfView = 100,
+	Distance = 1000, -- related to esp too
+	BodyPart = "Head"
 }
 end
 
@@ -233,9 +237,11 @@ end
 
 local function returnHit(hit, args)
 	CameraPosition = Camera.CFrame.Position
-	if args[2].Origin ~= CameraPosition then
-		if not table.find(args[3], PlayerFolder) then
-			args[2] = Ray.new(CameraPosition, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10))
+	local script = getcallingscript()
+	if tostring(script) == "GarbageCode" then
+		if table.find(args[3], LocalPlayer.Character, 1) and not table.find(args[3], Workspace.WaterCollision, 2) and not table.find(args[3], Workspace.Characters, 3) then
+			--args[2] = Ray.new(CameraPosition, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10)) -- bad code
+			args[2] = Ray.new(args[2].Origin, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10))
 			return
 		end
 	end
