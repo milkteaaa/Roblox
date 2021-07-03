@@ -218,25 +218,25 @@ end
 
 local function returnHit(hit, args)
     CameraPosition = Camera.CFrame.Position
-    local script = getcallingscript()
-    if tostring(script) == "GarbageCode" then
-        if table.find(args[3], LocalPlayer.Character, 1) and not table.find(args[3], Workspace.WaterCollision, 2) and not table.find(args[3], Workspace.Characters, 3) then
-            --args[2] = Ray.new(CameraPosition, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10)) -- bad code
-            args[2] = Ray.new(args[2].Origin, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10))
-            return
-        end
+    if table.find(args[3], LocalPlayer.Character, 1) and not table.find(args[3], Workspace.WaterCollision, 2) and not table.find(args[3], Workspace.Characters, 3) then
+        args[2] = Ray.new(args[2].Origin, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10))
+        return
     end
 end
 
 local rawmetatable = getrawmetatable(game)
-local old
-
 setreadonly(rawmetatable, false)
+local old
 old = hookfunction(rawmetatable.__namecall, function(...)
     local namecallmethod = getnamecallmethod()
+    local script = getcallingscript()
     local args = {...}
     if namecallmethod == "FindPartOnRayWithIgnoreList" then
-        returnHit(hit, args)
+        if tostring(script) == "GarbageCode" then
+            if hit then
+                returnHit(hit, args)
+            end
+        end
     end
     return old(unpack(args))
 end)
