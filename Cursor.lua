@@ -31,7 +31,7 @@ Cursor.Thickness = 1
 Cursor.Filled = true
 
 Render = RunService.RenderStepped:Connect(function()
-    if UserInputService.MouseEnabled then
+    if UserInputService.MouseBehavior == Enum.MouseBehavior.Default then
         UserInputService.MouseIconEnabled = false
         local Mouse = UserInputService:GetMouseLocation()
 
