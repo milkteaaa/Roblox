@@ -1,18 +1,21 @@
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
-getgenv().CursorConfig = {
-    Color = Color3.fromRGB(255,255,255),
-    OutlineColor = Color3.fromRGB(0,0,0),
+if not getgenv().CursorConfig then
+    getgenv().CursorConfig = {
+        Color = Color3.fromRGB(255,255,255),
+        OutlineColor = Color3.fromRGB(0,0,0),
 
-    Transparency = 1,
-    OutlineTransparency = 1,
+        Transparency = 1,
+        OutlineTransparency = 1,
 
-    Rainbow = false,
-    OutlineRainbow = false,
+        Rainbow = false,
+        OutlineRainbow = false,
 
-    DeleteCursor = false
-}
+        DeleteCursor = false
+    }
+end
+
 local CursorOutline = Drawing.new("Triangle")
 CursorOutline.Visible = true
 CursorOutline.Transparency = 1
@@ -56,17 +59,17 @@ Render = RunService.RenderStepped:Connect(function()
     end
 
     if CursorConfig.Rainbow then
-		local Hue, Saturation, Value = CursorConfig.Color:ToHSV()
-		if Hue == 1 then
-			Hue = 0
-		end
-		CursorConfig.Color = Color3.fromHSV(Hue + 0.001, 1, 1)
-	end
+        local Hue, Saturation, Value = CursorConfig.Color:ToHSV()
+        if Hue == 1 then
+            Hue = 0
+        end
+        CursorConfig.Color = Color3.fromHSV(Hue + 0.001, 1, 1)
+    end
     if CursorConfig.OutlineRainbow then
-		local Hue, Saturation, Value = CursorConfig.OutlineColor:ToHSV()
-		if Hue == 1 then
-			Hue = 0
-		end
-		CursorConfig.OutlineColor = Color3.fromHSV(Hue + 0.001, 1, 1)
-	end
+        local Hue, Saturation, Value = CursorConfig.OutlineColor:ToHSV()
+        if Hue == 1 then
+            Hue = 0
+        end
+        CursorConfig.OutlineColor = Color3.fromHSV(Hue + 0.001, 1, 1)
+    end
 end)
