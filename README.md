@@ -34,10 +34,6 @@ getgenv().Config = {
 -- github.com/AlexR32/Roblox
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
 ```
-### Changelog
-* Attempt to fix FPS drop (x2)
-* Config changed (x2)
-* Little rewrite due to fps drop fix
 ## BRM5 ESP Cut
 ```lua
 getgenv().Config = {
@@ -115,8 +111,6 @@ SettingsSection:CreateKeybind("UI Toggle", Config.UIKeybind, true, false, functi
     Config.UIKeybind = Enum.KeyCode[Key]
 end)
 ```
-### Changelog
-* Rewrited some things
 ## TPR:R Hax
 ```lua
 getgenv().Config = {
