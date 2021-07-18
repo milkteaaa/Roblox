@@ -90,9 +90,10 @@ function formatargs(args,showkeys)
     return table.concat(strargs, ", ")
 end
 
-local function remotelog(event, namecallmethod, script, args)
-    table.insert(logtable, #logtable + 1, event.ClassName .. " called! - " .. os.date("%c") .. "\nPath: " .. GetFullName(event) .. "\nFrom Script: " .. GetFullName(script) .. "\nArguments: " .. formatargs(args) .. "\nRuns As: " .. GetFullName(event) .. ":" .. namecallmethod .. "(" .. formatargs(args) .. ")")
+local function remotelog(self, namecallmethod, script, args)
+    table.insert(logtable, #logtable + 1, self.ClassName .. " called! - " .. os.date("%c") .. "\nPath: " .. GetFullName(self) .. "\nFrom Script: " .. GetFullName(script) .. "\nArguments: " .. formatargs(args) .. "\nRuns As: " .. GetFullName(self) .. ":" .. namecallmethod .. "(" .. formatargs(args) .. ")")
 end
+
 game.Players.PlayerRemoving:Connect(function(Player)
     if Player == game.Players.LocalPlayer then
         table.insert(logtable, #logtable + 1, "Remote Log Ended - " .. os.date("%c"))
@@ -100,17 +101,12 @@ game.Players.PlayerRemoving:Connect(function(Player)
     end
 end)
 
-local rawmetatable = getrawmetatable(game)
-local namecall = rawmetatable.__namecall
-setreadonly(rawmetatable, false)
-
-rawmetatable.__namecall = newcclosure(function(event, ...)
+namecall = hookmetamethod(game, "__namecall", function(self, ...)
     local namecallmethod = getnamecallmethod()
     local script = getcallingscript()
     local args = {...}
     if namecallmethod == "FireServer" or namecallmethod == "InvokeServer" then
-        remotelog(event, namecallmethod, script, args)
+        remotelog(self, namecallmethod, script, args)
     end
-    return namecall(event, ...)
+    return namecall(self, ...)
 end)
-setreadonly(rawmetatable, true)
