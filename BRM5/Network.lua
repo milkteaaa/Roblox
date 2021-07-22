@@ -60,12 +60,10 @@ local function EncryptArguments(String, Key, SubtractValue)
 end
 
 function Network:FireServer(...)
-    print(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key))
     RemoteEvent:FireServer(EncryptArguments(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key)))
 end
 
 function Network:InvokeServer(...)
-    print(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key))
     return RemoteFunction:InvokeServer(EncryptArguments(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key)))
 end
 
