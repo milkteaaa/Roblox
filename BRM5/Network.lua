@@ -1,6 +1,7 @@
-local Network = {} -- table where i store all the network functions
-local Key -- needed to fire remotes
-local Verify -- also needed to fire remotes
+local Network = {}
+
+local Key
+local Verify
 
 local Byte = string.byte
 local Char = string.char
@@ -19,12 +20,12 @@ for _, Func in next, getgc() do
         if UpValues[5] then
             Key = UpValues[5] -- encoded table with numbers ex: [1, 2, 3, 4]
             Verify = UpValues[4] -- long string ex: 1234-1234-12-1234-1234
-            break;
+            break
         end
     end
 end
 
---print(Key, Verify) -- first try wtf
+--print(Key, Verify)
 
 local function ConfuseChar(Character, Offset, SubtractValue)
     -- (string.byte(p1) - 32 +
@@ -45,7 +46,7 @@ local function EncryptArguments(String, Key, SubtractValue)
             for InnerIdx = 0, 3 do
                 if Idx % 4 == InnerIdx then
                     Output = Output .. ConfuseChar(Sub(String, Idx, Idx), Key[InnerIdx + 1], SubtractValue)
-                    break;
+                    break
                 end
             end
         end
@@ -59,11 +60,13 @@ local function EncryptArguments(String, Key, SubtractValue)
 end
 
 function Network:FireServer(...)
-    RemoteEvent:FireServer(EncryptArguments(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key)));
+    RemoteEvent:FireServer(EncryptArguments(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key)))
+    print(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key))
 end
 
 function Network:InvokeServer(...)
-    return RemoteFunction:InvokeServer(EncryptArguments(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key)));
+    return RemoteFunction:InvokeServer(EncryptArguments(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key)))
+    print(HttpService:JSONEncode({Verify, ...}), HttpService:JSONDecode(Key))
 end
 
 return Network
