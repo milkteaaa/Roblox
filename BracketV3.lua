@@ -539,7 +539,7 @@ function Library:CreateWindow(Config, Parent)
 			function SectionInit:CreateColorpicker(Name,Callback)
 				local ColorpickerInit = {}
 
-				local Colorpicker = Folder.Colorpicker
+				local Colorpicker = Folder.Colorpicker:Clone()
 				Colorpicker.Name = Name .. " CP"
 				Colorpicker.Parent = Section.Container
 
