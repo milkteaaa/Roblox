@@ -561,7 +561,7 @@ function Library:CreateWindow(Config, Parent)
 				local function UpdateColor()
 					Colorpicker.Color.BackgroundColor3 = Color3.fromHSV(ColorTable.Hue,ColorTable.Saturation,ColorTable.Value)
 					Colorpicker.Pallete.GradientPallete.BackgroundColor3 = Color3.fromHSV(ColorTable.Hue,1,1)
-					Colorpicker.Pallete.Input.TextBox.PlaceholderText = "RGB: " .. math.round(Colorpicker.Color.BackgroundColor3.R* 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.G * 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.B * 255)
+					Colorpicker.Pallete.Input.InputBox.PlaceholderText = "RGB: " .. math.round(Colorpicker.Color.BackgroundColor3.R* 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.G * 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.B * 255)
 					Callback(Colorpicker.Color.BackgroundColor3)
 				end
 
@@ -625,7 +625,7 @@ function Library:CreateWindow(Config, Parent)
 					local Hue, Saturation, Value = Color:ToHSV()
 					Colorpicker.Color.BackgroundColor3 = Color3.fromHSV(Hue,Saturation,Value)
 					Colorpicker.Pallete.GradientPallete.BackgroundColor3 = Color3.fromHSV(Hue,1,1)
-					Colorpicker.Pallete.Input.TextBox.PlaceholderText = "RGB: " .. math.round(Colorpicker.Color.BackgroundColor3.R* 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.G * 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.B * 255)
+					Colorpicker.Pallete.Input.InputBox.PlaceholderText = "RGB: " .. math.round(Colorpicker.Color.BackgroundColor3.R* 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.G * 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.B * 255)
 					ColorTable = {
 						Hue = Hue,
 						Saturation = Saturation,
@@ -634,11 +634,11 @@ function Library:CreateWindow(Config, Parent)
 					Callback(Color)
 				end
 
-				Colorpicker.Pallete.Input.TextBox.FocusLost:Connect(function(Enter)
+				Colorpicker.Pallete.Input.InputBox.FocusLost:Connect(function(Enter)
 					if Enter then
-						local ColorString = string.split(string.gsub(Colorpicker.Pallete.Input.TextBox.Text," ", ""), ",")
+						local ColorString = string.split(string.gsub(Colorpicker.Pallete.Input.InputBox.Text," ", ""), ",")
 						ColorpickerInit:UpdateColor(Color3.fromRGB(ColorString[1],ColorString[2],ColorString[3]))
-						Colorpicker.Pallete.Input.TextBox.Text = ""
+						Colorpicker.Pallete.Input.InputBox.Text = ""
 					end
 				end)
 
