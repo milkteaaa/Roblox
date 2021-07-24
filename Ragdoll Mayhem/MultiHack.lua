@@ -6,7 +6,7 @@ local Workspace = game:GetService("Workspace")
 local LocalPlayer = PlayerService.LocalPlayer
 local Camera = Workspace.CurrentCamera
 
-local PlayerFolder = Workspace.Characters
+local PlayerFolder = Workspace.LiveRagdolls
 
 if not getgenv().Config then
 getgenv().Config = {
@@ -34,7 +34,7 @@ getgenv().Config = {
     Sensitivity = 0.5,
     SilentAim = true,
     TeamCheck = false,
-    FieldOfView = 75,
+    FieldOfView = 100,
     Distance = 1000, -- this related to esp too
     AimPart = "Head",
 
@@ -43,6 +43,154 @@ getgenv().Config = {
     ESPModelPart = "Torso"
 }
 end
+
+local UIConfig = {
+	WindowName = "RAGDOLL UNIVERSE",
+	Color = Color3.fromRGB(255,128,64),
+	Keybind = Enum.KeyCode.RightShift
+}
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BracketV3.lua"))()
+local Window = Library:CreateWindow(UIConfig, game:GetService("CoreGui"))
+
+local Tab1 = Window:CreateTab("Main")
+local Tab2 = Window:CreateTab("UI Settings")
+
+local Section1 = Tab1:CreateSection("Aimbot")
+local Section2 = Tab1:CreateSection("FOV Circle")
+local Section3 = Tab1:CreateSection("ESP")
+local Section4 = Tab2:CreateSection("Menu")
+
+local SilentAimToggle = Section1:CreateToggle("Silent Aim", function(State)
+	Config.SilentAim = State
+end)
+SilentAimToggle:SetState(Config.SilentAim)
+
+local AimbotToggle = Section1:CreateToggle("Aimbot", function(State)
+	Config.Aimbot = State
+end)
+AimbotToggle:SetState(Config.Aimbot)
+
+local SensitivitySlider = Section1:CreateSlider("Aimbot Sensitivity", 0,1,false, function(Value)
+	Config.Sensitivity = Value
+end)
+SensitivitySlider:SetValue(Config.Sensitivity)
+
+local TeamCheckToggle = Section1:CreateToggle("Team Check", function(State)
+	Config.TeamCheck = State
+end)
+TeamCheckToggle:SetState(Config.TeamCheck)
+
+local FOVSlider = Section1:CreateSlider("Field Of View", 0,500,true, function(Value)
+	Config.FieldOfView = Value
+end)
+FOVSlider:SetValue(Config.FieldOfView)
+
+local DistanceSlider = Section1:CreateSlider("Distance", 0,5000,true, function(Value)
+	Config.Distance = Value
+end)
+DistanceSlider:AddToolTip("Works for esp too")
+DistanceSlider:SetValue(Config.Distance)
+
+local AimPartDropdown = Section1:CreateDropdown("Aim Part")
+local HeadOption = AimPartDropdown:AddOption("Head", function(String)
+	Config.AimPart = String
+end)
+local TorsoOption = AimPartDropdown:AddOption("Torso", function(String)
+	Config.AimPart = String
+end)
+
+if Config.AimPart == "Head" then
+    HeadOption:SetOption()
+elseif Config.AimPart == "Torso" then
+    TorsoOption:SetOption()
+end
+
+
+local CircleToggle = Section2:CreateToggle("Circle Visible", function(State)
+	Config.CircleVisible = State
+end)
+CircleToggle:SetState(Config.CircleVisible)
+
+local CircleTranspSlider = Section2:CreateSlider("Circle Transparency", 0,1,false, function(Value)
+	Config.CircleTransparency = Value
+end)
+CircleTranspSlider:SetValue(Config.CircleTransparency)
+
+local CircleColorpicker = Section2:CreateColorpicker("Circle Color", function(Color)
+    Config.CircleColor = Color
+end)
+CircleColorpicker:UpdateColor(Config.CircleColor)
+
+local CircleThicknessSlider = Section2:CreateSlider("Circle Thickness", 1,5,true, function(Value)
+	Config.CircleThickness = Value
+end)
+CircleThicknessSlider:SetValue(Config.CircleThickness)
+
+local CircleSidesSlider = Section2:CreateSlider("Circle NumSides", 0,100,true, function(Value)
+	Config.CircleNumSides = Value
+end)
+CircleSidesSlider:SetValue(Config.CircleNumSides)
+
+local CircleFilledToggle = Section2:CreateToggle("Circle Filled", function(State)
+	Config.CircleFilled = State
+end)
+CircleFilledToggle:SetState(Config.CircleFilled)
+
+local CircleRainbowToggle = Section2:CreateToggle("Circle Rainbow", function(State)
+	Config.CircleRainbow = State
+end)
+CircleRainbowToggle:SetState(Config.CircleRainbow)
+
+
+local ESPOutlineToggle = Section3:CreateToggle("ESP Outline", function(State)
+	Config.OutlineVisible = State
+end)
+ESPOutlineToggle:SetState(Config.OutlineVisible)
+
+local ESPTextToggle = Section3:CreateToggle("Text Visible", function(State)
+	Config.TextVisible = State
+end)
+ESPTextToggle:SetState(Config.TextVisible)
+
+local ESPHealthToggle = Section3:CreateToggle("Healthbar Visible", function(State)
+	Config.HealthbarVisible = State
+end)
+ESPHealthToggle:SetState(Config.HealthbarVisible)
+
+local ESPBoxToggle = Section3:CreateToggle("Box Visible", function(State)
+	Config.BoxVisible = State
+end)
+ESPBoxToggle:SetState(Config.BoxVisible)
+
+local ESPColorpicker = Section3:CreateColorpicker("ESP Color", function(Color)
+    Config.Color = Color
+end)
+ESPColorpicker:UpdateColor(Config.Color)
+
+local ESPRainbowToggle = Section3:CreateToggle("ESP Rainbow", function(State)
+	Config.Rainbow = State
+end)
+ESPRainbowToggle:SetState(Config.Rainbow)
+
+local Toggle3 = Section4:CreateToggle("UI Toggle", function(State)
+	Window:Toggle(State)
+end)
+Toggle3:AddToolTip("Open/Close " .. UIConfig.WindowName)
+Toggle3:SetState(true)
+Toggle3:CreateKeybind(tostring(UIConfig.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
+	UIConfig.Keybind = Enum.KeyCode[Key]
+end)
+local Slider3 = Section4:CreateSlider("Tile Size",0,1000,true, function(Value)
+	Window:SetTileSize(Value)
+end)
+Slider3:AddToolTip("Set Background Tile Size")
+Slider3:SetValue(500)
+local Colorpicker3 = Section4:CreateColorpicker("UI Color", function(Color)
+	Window:ChangeColor(Color)
+end)
+Colorpicker3:UpdateColor(UIConfig.Color)
+Colorpicker3:AddToolTip("Change library color")
 
 local function GetCorners(Model)
     local CFrame, Size = Model:GetBoundingBox()
@@ -93,64 +241,56 @@ local function CreateESP(Model, Info)
         if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild(Config.ESPPlayerPart) then
             if Model and Model:FindFirstChild(Config.ESPModelPart) then
                 if Model:FindFirstChildOfClass("Humanoid") and Model:FindFirstChildOfClass("Humanoid").Health ~= 0 then
-                    if (LocalPlayer.Character[Config.ESPPlayerPart].Position - Model[Config.ESPModelPart].Position).Magnitude <= Config.Distance then
-                        Camera = Workspace.CurrentCamera
-                        local Vector, OnScreen = Camera:WorldToViewportPoint(Model[Config.ESPModelPart].Position)
-                        if OnScreen then
-                            local xSize,ySize,xMin,yMin,xMax,yMax = GetCorners(Model)
+                    Camera = Workspace.CurrentCamera
+                    local Vector, OnScreen = Camera:WorldToViewportPoint(Model[Config.ESPModelPart].Position)
+                    if OnScreen then
+                        local xSize,ySize,xMin,yMin,xMax,yMax = GetCorners(Model)
 
-                            Text.Visible = Config.TextVisible
-                            Text.Transparency = 1
-                            Text.Color = Color3.fromRGB(255,255,255)
-                            Text.Text = tostring(Info) .. "\n" .. math.round((LocalPlayer.Character[Config.ESPPlayerPart].Position - Model[Config.ESPModelPart].Position).Magnitude) .. " studs"
-                            Text.Size = 20
-                            Text.Center = true
-                            Text.Outline = Config.OutlineVisible
-                            Text.OutlineColor = Color3.fromRGB(0,0,0)
-                            Text.Position = Vector2.new(xMax - xSize/2, yMax)
+                        Text.Visible = Config.TextVisible
+                        Text.Transparency = 1
+                        Text.Color = Color3.fromRGB(255,255,255)
+                        Text.Text = tostring(Info) .. "\n" .. math.round((LocalPlayer.Character[Config.ESPPlayerPart].Position - Model[Config.ESPModelPart].Position).Magnitude) .. " studs"
+                        Text.Size = 20
+                        Text.Center = true
+                        Text.Outline = Config.OutlineVisible
+                        Text.OutlineColor = Color3.fromRGB(0,0,0)
+                        Text.Position = Vector2.new(xMax - xSize/2, yMax)
 
-                            HealthbarOutline.Visible = Config.HealthbarVisible and Config.OutlineVisible
-                            HealthbarOutline.Transparency = 1
-                            HealthbarOutline.Color = Color3.fromRGB(0,0,0)
-                            HealthbarOutline.Thickness = 1
-                            HealthbarOutline.Filled = true
+                        HealthbarOutline.Visible = Config.HealthbarVisible and Config.OutlineVisible
+                        HealthbarOutline.Transparency = 1
+                        HealthbarOutline.Color = Color3.fromRGB(0,0,0)
+                        HealthbarOutline.Thickness = 1
+                        HealthbarOutline.Filled = true
 
-                            HealthbarOutline.Size = Vector2.new(4,-ySize-2)
-                            HealthbarOutline.Position = Vector2.new(xMin-8,yMax+1)
+                        HealthbarOutline.Size = Vector2.new(4,-ySize-2)
+                        HealthbarOutline.Position = Vector2.new(xMin-8,yMax+1)
 
-                            Healthbar.Visible = Config.HealthbarVisible
-                            Healthbar.Transparency = 1
-                            Healthbar.Color = Color3.fromRGB(255,0,0):Lerp(Color3.fromRGB(0,255,0), Model.Humanoid.Health/Model.Humanoid.MaxHealth)
-                            Healthbar.Thickness = 1
-                            Healthbar.Filled = true
+                        Healthbar.Visible = Config.HealthbarVisible
+                        Healthbar.Transparency = 1
+                        Healthbar.Color = Color3.fromRGB(255,0,0):Lerp(Color3.fromRGB(0,255,0), Model.Humanoid.Health/Model.Humanoid.MaxHealth)
+                        Healthbar.Thickness = 1
+                        Healthbar.Filled = true
 
-                            Healthbar.Size = Vector2.new(2,0):Lerp(Vector2.new(2,-ySize),Model.Humanoid.Health/Model.Humanoid.MaxHealth)
-                            Healthbar.Position = Vector2.new(xMin-7,yMax)
+                        Healthbar.Size = Vector2.new(2,0):Lerp(Vector2.new(2,-ySize),Model.Humanoid.Health/Model.Humanoid.MaxHealth)
+                        Healthbar.Position = Vector2.new(xMin-7,yMax)
 
-                            BoxOutline.Visible = Config.OutlineVisible
-                            BoxOutline.Transparency = 1
-                            BoxOutline.Color = Color3.fromRGB(0,0,0)
-                            BoxOutline.Thickness = 4
-                            BoxOutline.Filled = false
+                        BoxOutline.Visible = Config.BoxVisible and Config.OutlineVisible
+                        BoxOutline.Transparency = 1
+                        BoxOutline.Color = Color3.fromRGB(0,0,0)
+                        BoxOutline.Thickness = 4
+                        BoxOutline.Filled = false
 
-                            BoxOutline.Size = Vector2.new(xSize,ySize)
-                            BoxOutline.Position = Vector2.new(xMin,yMin)
+                        BoxOutline.Size = Vector2.new(xSize,ySize)
+                        BoxOutline.Position = Vector2.new(xMin,yMin)
 
-                            Box.Visible = Config.BoxVisible
-                            Box.Transparency = 1
-                            Box.Color = Config.Color
-                            Box.Thickness = 2
-                            Box.Filled = false
+                        Box.Visible = Config.BoxVisible
+                        Box.Transparency = 1
+                        Box.Color = Config.Color
+                        Box.Thickness = 2
+                        Box.Filled = false
 
-                            Box.Size = Vector2.new(xSize, ySize)
-                            Box.Position = Vector2.new(xMin, yMin)
-                        else
-                            Text.Visible = false
-                            HealthbarOutline.Visible = false
-                            Healthbar.Visible = false
-                            BoxOutline.Visible = false
-                            Box.Visible = false
-                        end
+                        Box.Size = Vector2.new(xSize, ySize)
+                        Box.Position = Vector2.new(xMin, yMin)
                     else
                         Text.Visible = false
                         HealthbarOutline.Visible = false
@@ -166,7 +306,6 @@ local function CreateESP(Model, Info)
                     Box.Visible = false
                 end
             else
-                warn("BoxESP: ModelPart.Parent ~= Model")
                 Text.Visible = false
                 HealthbarOutline.Visible = false
                 Healthbar.Visible = false
@@ -174,7 +313,7 @@ local function CreateESP(Model, Info)
                 Box.Visible = false
             end
         else
-            warn("BoxESP: PlayerPart.Parent ~= Player.Character")
+            warn("BoxESP: ModelPart.Parent ~= Model")
             Text.Visible = false
             HealthbarOutline.Visible = false
             Healthbar.Visible = false
@@ -232,31 +371,25 @@ local function GetTarget()
 end
 
 local function returnHit(hit, args)
+    Camera = Workspace.CurrentCamera
     CameraPosition = Camera.CFrame.Position
-    if table.find(args[3], LocalPlayer.Character, 1) and not table.find(args[3], Workspace.WaterCollision, 2) and not table.find(args[3], Workspace.Characters, 3) then
-        args[2] = Ray.new(args[2].Origin, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10))
+    if table.find(args[2], LocalPlayer.Character, 1) and not table.find(args[2], Workspace.WaterLayer, 2) and not table.find(args[2], Workspace.LiveRagdolls, 3) then
+        --table.foreach(args[2], print)
+        args[1] = Ray.new(args[1].Origin, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10))
         return
     end
 end
 
-local rawmetatable = getrawmetatable(game)
-local old
-
-setreadonly(rawmetatable, false)
-old = hookfunction(rawmetatable.__namecall, function(...)
+namecall = hookmetamethod(game, "__namecall", function(self, ...)
     local namecallmethod = getnamecallmethod()
-    local script = getcallingscript()
     local args = {...}
     if namecallmethod == "FindPartOnRayWithIgnoreList" then
-        if tostring(script) == "GarbageCode" then
-            if hit then
-                returnHit(hit, args)
-            end
+        if hit then
+            returnHit(hit, args)
         end
     end
-    return old(unpack(args))
+    return namecall(self, unpack(args))
 end)
-setreadonly(rawmetatable, true)
 
 RunService.RenderStepped:Connect(function()
     if Config.Aimbot then
