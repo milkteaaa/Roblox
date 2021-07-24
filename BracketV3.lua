@@ -378,7 +378,10 @@ function Library:CreateWindow(Config, Parent)
 				local function Sliding(Input)
                     local Position = UDim2.new(math.clamp((Input.Position.X - Slider.Slider.AbsolutePosition.X) / Slider.Slider.AbsoluteSize.X,0,1),0,1,0)
                     Slider.Slider.Bar.Size = Position
-                    local SliderValue = Precise and math.floor(((Position.X.Scale * Max) / Max) * (Max - Min) + Min) or string.format("%.2f", ((Position.X.Scale * Max) / Max) * (Max - Min) + Min)
+					local SliderPrecise = ((Position.X.Scale * Max) / Max) * (Max - Min) + Min
+					local SliderNonPrecise = math.floor(((Position.X.Scale * Max) / Max) * (Max - Min) + Min)
+                    local SliderValue = Precise and SliderNonPrecise or SliderPrecise
+					SliderValue = tonumber(string.format("%.2f", SliderValue))
 					GlobalSliderValue = SliderValue
                     Slider.Value.PlaceholderText = tostring(SliderValue)
                     Callback(GlobalSliderValue)
