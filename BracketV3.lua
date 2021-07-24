@@ -102,12 +102,17 @@ function Library:CreateWindow(Config, Parent)
 		if State then
 			Main.Visible = true
 		elseif not State then
+			for _,Pallete in pairs(Screen:GetChildren()) do
+				if Pallete:IsA("Frame") and Pallete.Name ~= "Main" then
+					Pallete.Visible = false
+				end
+			end
 			Screen.ToolTip.Visible = false
 			Main.Visible = false
 		end
 		Library.Toggle = State
 	end
-	local function ChangeColor(Color) -- broken asf
+	local function ChangeColor(Color)
 		Config.Color = Color
 		for i, v in pairs(Library.ColorTable) do
 			if v.BackgroundColor3 ~= Color3.fromRGB(50, 50, 50) then
