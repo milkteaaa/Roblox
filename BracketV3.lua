@@ -396,8 +396,8 @@ function Library:CreateWindow(Config, Parent)
 					GlobalSliderValue = Slider.Value.Text
 					Slider.Slider.Bar.Size = UDim2.new(Slider.Value.Text / Max,0,1,0)
 					Slider.Value.PlaceholderText = Slider.Value.Text
-					Slider.Value.Text = ""
 					Callback(tonumber(Slider.Value.Text))
+					Slider.Value.Text = ""
 				end)
 
 				Slider.InputBegan:Connect(function(Input)
