@@ -128,12 +128,29 @@ function Library:CreateWindow(Config, Parent)
 	function WindowInit:ChangeColor(Color)
 		ChangeColor(Color)
 	end
-	function WindowInit:SetTileSize(Size)
-		Holder.TileSize = UDim2.new(0,Size,0,Size)
+
+	function WindowInit:SetBackground(ImageId)
+		Holder.Image = "rbxassetid://" .. ImageId
+	end
+
+	function WindowInit:SetBackgroundColor(Color)
+		Holder.ImageColor3 = Color
+	end
+	function WindowInit:SetBackgroundTransparency(Transparency)
+		Holder.ImageTransparency = Transparency
+	end
+
+	function WindowInit:SetTileOffset(Offset)
+		Holder.TileSize = UDim2.new(0,Offset,0,Offset)
+	end
+	function WindowInit:SetTileScale(Scale)
+		Holder.TileSize = UDim2.new(Scale,0,Scale,0)
 	end
 
 	RunService.RenderStepped:Connect(function()
-		Screen.ToolTip.Position = UDim2.new(0,UserInputService:GetMouseLocation().X + 10,0,UserInputService:GetMouseLocation().Y - 5)
+		if Library.Toggle then
+			Screen.ToolTip.Position = UDim2.new(0,UserInputService:GetMouseLocation().X + 10,0,UserInputService:GetMouseLocation().Y - 5)
+		end
 	end)
 
 	function WindowInit:CreateTab(Name)
