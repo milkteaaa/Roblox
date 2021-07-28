@@ -146,7 +146,7 @@ local Colorpicker3 = Section3:CreateColorpicker("UI Color", function(Color)
 	Window:ChangeColor(Color)
 end)
 Colorpicker3:UpdateColor(Config.Color)
-
+-- credits to jan for patterns
 local Dropdown3 = Section4:CreateDropdown("Image")
 local Option7 = Dropdown3:AddOption("Default", function(String)
 	Window:SetBackground("2151741365")
