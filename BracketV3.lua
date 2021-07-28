@@ -410,7 +410,13 @@ function Library:CreateWindow(Config, Parent)
                     Slider.Value.PlaceholderText = tostring(SliderValue)
                     Callback(GlobalSliderValue)
                 end
-
+				local function SetValue(Value)
+					GlobalSliderValue = Value
+					Slider.Slider.Bar.Size = UDim2.new(Value / Max,0,1,0)
+					Slider.Value.PlaceholderText = Value
+					Callback(Value)
+				end
+				SetValue(Default)
 				Slider.Value.FocusLost:Connect(function()
 					if not tonumber(Slider.Value.Text) then
 						Slider.Value.Text = GlobalSliderValue
@@ -478,7 +484,6 @@ function Library:CreateWindow(Config, Parent)
 					Slider.Value.PlaceholderText = Value
 					Callback(Value)
 				end
-				SliderInit:SetValue(Default)
 				function SliderInit:GetValue(Value)
 					return GlobalSliderValue
 				end
