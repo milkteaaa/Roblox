@@ -45,9 +45,9 @@ getgenv().Config = {
 end
 
 local UIConfig = {
-	WindowName = "RAGDOLL UNIVERSE",
-	Color = Color3.fromRGB(255,128,64),
-	Keybind = Enum.KeyCode.RightShift
+    WindowName = "RAGDOLL UNIVERSE",
+    Color = Color3.fromRGB(255,128,64),
+    Keybind = Enum.KeyCode.RightShift
 }
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BracketV3.lua"))()
@@ -60,44 +60,44 @@ local Section1 = Tab1:CreateSection("Aimbot")
 local Section2 = Tab1:CreateSection("FOV Circle")
 local Section3 = Tab1:CreateSection("ESP")
 local Section4 = Tab2:CreateSection("Menu")
+local Section5 = Tab2:CreateSection("Background")
 
-local SilentAimToggle = Section1:CreateToggle("Silent Aim", function(State)
-	Config.SilentAim = State
+local SilentAimToggle = Section1:CreateToggle("Silent Aim", nil, function(State)
+    Config.SilentAim = State
 end)
 SilentAimToggle:SetState(Config.SilentAim)
 
-local AimbotToggle = Section1:CreateToggle("Aimbot", function(State)
-	Config.Aimbot = State
+local AimbotToggle = Section1:CreateToggle("Aimbot", nil, function(State)
+    Config.Aimbot = State
 end)
 AimbotToggle:SetState(Config.Aimbot)
 
-local SensitivitySlider = Section1:CreateSlider("Aimbot Sensitivity", 0,1,false, function(Value)
-	Config.Sensitivity = Value
-end)
-SensitivitySlider:SetValue(Config.Sensitivity)
-
-local TeamCheckToggle = Section1:CreateToggle("Team Check", function(State)
-	Config.TeamCheck = State
+local TeamCheckToggle = Section1:CreateToggle("Team Check", nil, function(State)
+    Config.TeamCheck = State
 end)
 TeamCheckToggle:SetState(Config.TeamCheck)
 
-local FOVSlider = Section1:CreateSlider("Field Of View", 0,500,true, function(Value)
-	Config.FieldOfView = Value
+local SensitivitySlider = Section1:CreateSlider("Aimbot Sensitivity", 0,1,nil,false, function(Value)
+    Config.Sensitivity = Value
+end)
+SensitivitySlider:SetValue(Config.Sensitivity)
+
+local FOVSlider = Section1:CreateSlider("Field Of View", 0,500,nil,true, function(Value)
+    Config.FieldOfView = Value
 end)
 FOVSlider:SetValue(Config.FieldOfView)
 
-local DistanceSlider = Section1:CreateSlider("Distance", 0,5000,true, function(Value)
-	Config.Distance = Value
+local DistanceSlider = Section1:CreateSlider("Distance", 0,5000,nil,true, function(Value)
+    Config.Distance = Value
 end)
-DistanceSlider:AddToolTip("Works for esp too")
 DistanceSlider:SetValue(Config.Distance)
 
 local AimPartDropdown = Section1:CreateDropdown("Aim Part")
 local HeadOption = AimPartDropdown:AddOption("Head", function(String)
-	Config.AimPart = String
+    Config.AimPart = String
 end)
 local TorsoOption = AimPartDropdown:AddOption("Torso", function(String)
-	Config.AimPart = String
+    Config.AimPart = String
 end)
 
 if Config.AimPart == "Head" then
@@ -107,13 +107,13 @@ elseif Config.AimPart == "Torso" then
 end
 
 
-local CircleToggle = Section2:CreateToggle("Circle Visible", function(State)
-	Config.CircleVisible = State
+local CircleToggle = Section2:CreateToggle("Circle Visible", nil, function(State)
+    Config.CircleVisible = State
 end)
 CircleToggle:SetState(Config.CircleVisible)
 
-local CircleTranspSlider = Section2:CreateSlider("Circle Transparency", 0,1,false, function(Value)
-	Config.CircleTransparency = Value
+local CircleTranspSlider = Section2:CreateSlider("Circle Transparency", 0,1,nil,false, function(Value)
+    Config.CircleTransparency = Value
 end)
 CircleTranspSlider:SetValue(Config.CircleTransparency)
 
@@ -122,44 +122,44 @@ local CircleColorpicker = Section2:CreateColorpicker("Circle Color", function(Co
 end)
 CircleColorpicker:UpdateColor(Config.CircleColor)
 
-local CircleThicknessSlider = Section2:CreateSlider("Circle Thickness", 1,5,true, function(Value)
-	Config.CircleThickness = Value
+local CircleThicknessSlider = Section2:CreateSlider("Circle Thickness", 1,5,nil,true, function(Value)
+    Config.CircleThickness = Value
 end)
 CircleThicknessSlider:SetValue(Config.CircleThickness)
 
-local CircleSidesSlider = Section2:CreateSlider("Circle NumSides", 0,100,true, function(Value)
-	Config.CircleNumSides = Value
+local CircleSidesSlider = Section2:CreateSlider("Circle NumSides", 0,100,nil,true, function(Value)
+    Config.CircleNumSides = Value
 end)
 CircleSidesSlider:SetValue(Config.CircleNumSides)
 
-local CircleFilledToggle = Section2:CreateToggle("Circle Filled", function(State)
-	Config.CircleFilled = State
+local CircleFilledToggle = Section2:CreateToggle("Circle Filled", nil, function(State)
+    Config.CircleFilled = State
 end)
 CircleFilledToggle:SetState(Config.CircleFilled)
 
-local CircleRainbowToggle = Section2:CreateToggle("Circle Rainbow", function(State)
-	Config.CircleRainbow = State
+local CircleRainbowToggle = Section2:CreateToggle("Circle Rainbow", nil, function(State)
+    Config.CircleRainbow = State
 end)
 CircleRainbowToggle:SetState(Config.CircleRainbow)
 
 
-local ESPOutlineToggle = Section3:CreateToggle("ESP Outline", function(State)
-	Config.OutlineVisible = State
+local ESPOutlineToggle = Section3:CreateToggle("ESP Outline", nil, function(State)
+    Config.OutlineVisible = State
 end)
 ESPOutlineToggle:SetState(Config.OutlineVisible)
 
-local ESPTextToggle = Section3:CreateToggle("Text Visible", function(State)
-	Config.TextVisible = State
+local ESPTextToggle = Section3:CreateToggle("Text Visible", nil, function(State)
+    Config.TextVisible = State
 end)
 ESPTextToggle:SetState(Config.TextVisible)
 
-local ESPHealthToggle = Section3:CreateToggle("Healthbar Visible", function(State)
-	Config.HealthbarVisible = State
+local ESPHealthToggle = Section3:CreateToggle("Healthbar Visible", nil, function(State)
+    Config.HealthbarVisible = State
 end)
 ESPHealthToggle:SetState(Config.HealthbarVisible)
 
-local ESPBoxToggle = Section3:CreateToggle("Box Visible", function(State)
-	Config.BoxVisible = State
+local ESPBoxToggle = Section3:CreateToggle("Box Visible", nil, function(State)
+    Config.BoxVisible = State
 end)
 ESPBoxToggle:SetState(Config.BoxVisible)
 
@@ -168,29 +168,65 @@ local ESPColorpicker = Section3:CreateColorpicker("ESP Color", function(Color)
 end)
 ESPColorpicker:UpdateColor(Config.Color)
 
-local ESPRainbowToggle = Section3:CreateToggle("ESP Rainbow", function(State)
-	Config.Rainbow = State
+local ESPRainbowToggle = Section3:CreateToggle("ESP Rainbow", nil, function(State)
+    Config.Rainbow = State
 end)
 ESPRainbowToggle:SetState(Config.Rainbow)
 
-local Toggle3 = Section4:CreateToggle("UI Toggle", function(State)
+
+
+local Toggle3 = Section4:CreateToggle("UI Toggle", nil, function(State)
 	Window:Toggle(State)
 end)
-Toggle3:AddToolTip("Open/Close " .. UIConfig.WindowName)
-Toggle3:SetState(true)
 Toggle3:CreateKeybind(tostring(UIConfig.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
 	UIConfig.Keybind = Enum.KeyCode[Key]
 end)
-local Slider3 = Section4:CreateSlider("Tile Size",0,1000,true, function(Value)
-	Window:SetTileSize(Value)
-end)
-Slider3:AddToolTip("Set Background Tile Size")
-Slider3:SetValue(500)
+Toggle3:SetState(true)
+
 local Colorpicker3 = Section4:CreateColorpicker("UI Color", function(Color)
 	Window:ChangeColor(Color)
 end)
 Colorpicker3:UpdateColor(UIConfig.Color)
-Colorpicker3:AddToolTip("Change library color")
+
+-- credits to jan for patterns
+local Dropdown3 = Section5:CreateDropdown("Image")
+local Option7 = Dropdown3:AddOption("Default", function(String)
+	Window:SetBackground("2151741365")
+end)
+local Option8 = Dropdown3:AddOption("Hearts", function(String)
+	Window:SetBackground("6073763717")
+end)
+local Option9 = Dropdown3:AddOption("Abstract", function(String)
+	Window:SetBackground("6073743871")
+end)
+local Option10 = Dropdown3:AddOption("Hexagon", function(String)
+	Window:SetBackground("6073628839")
+end)
+local Option11 = Dropdown3:AddOption("Circles", function(String)
+	Window:SetBackground("6071579801")
+end)
+local Option12 = Dropdown3:AddOption("Lace With Flowers", function(String)
+	Window:SetBackground("6071575925")
+end)
+local Option13 = Dropdown3:AddOption("Floral", function(String)
+	Window:SetBackground("5553946656")
+end)
+Option7:SetOption()
+
+local Colorpicker4 = Section5:CreateColorpicker("Color", function(Color)
+	Window:SetBackgroundColor(Color)
+end)
+Colorpicker4:UpdateColor(Color3.new(1,1,1))
+
+local Slider3 = Section5:CreateSlider("Transparency",0,1,nil,false, function(Value)
+	Window:SetBackgroundTransparency(Value)
+end)
+Slider3:SetValue(0)
+
+local Slider4 = Section5:CreateSlider("Tile Scale",0,1,nil,false, function(Value)
+	Window:SetTileScale(Value)
+end)
+Slider4:SetValue(0.5)
 
 local function GetCorners(Model)
     local CFrame, Size = Model:GetBoundingBox()
