@@ -276,14 +276,15 @@ function Library:CreateWindow(Config, Parent)
 
 				return ButtonInit
 			end
-			function SectionInit:CreateToggle(Name, Callback)
+			function SectionInit:CreateToggle(Name, Default, Callback)
+				Default = Default or false
 				local ToggleInit = {}
 				local Toggle = Folder.Toggle:Clone()
 				Toggle.Name = Name .. " T"
 				Toggle.Parent = Section.Container
 				Toggle.Title.Text = Name
 				Toggle.Size = UDim2.new(1,-10,0,Toggle.Title.TextBounds.Y + 5)
-
+				
 				table.insert(Library.ColorTable, Toggle.Toggle)
 				local ToggleState = false
 
@@ -296,7 +297,7 @@ function Library:CreateWindow(Config, Parent)
 					ToggleState = State
 					Callback(State)
 				end
-
+				SetState(Default)
 				Toggle.MouseButton1Click:Connect(function()
 					ToggleState = not ToggleState
 					SetState(ToggleState)
@@ -381,7 +382,8 @@ function Library:CreateWindow(Config, Parent)
 				end
 				return ToggleInit
 			end
-			function SectionInit:CreateSlider(Name, Min, Max, Precise, Callback)
+			function SectionInit:CreateSlider(Name, Min, Max, Default, Precise, Callback)
+				Default = Default or 50
 				local SliderInit = {}
 				local Slider = Folder.Slider:Clone()
 				Slider.Name = Name .. " S"
@@ -476,7 +478,7 @@ function Library:CreateWindow(Config, Parent)
 					Slider.Value.PlaceholderText = Value
 					Callback(Value)
 				end
-
+				SliderInit:SetValue(Default)
 				function SliderInit:GetValue(Value)
 					return GlobalSliderValue
 				end
@@ -554,7 +556,17 @@ function Library:CreateWindow(Config, Parent)
 						Dropdown.Container.Value.Text = Name
 						Callback(Name)
 					end
+					function OptionInit:Remove()
+						Option:Destroy()
+					end
 					return OptionInit
+				end
+				function DropdownInit:ClearOptions()
+					for _, Option in pairs(Dropdown.Container.Holder.Container:GetChildren()) do
+						if Option:IsA("TextButton") then
+							Option:Destroy()
+						end
+					end
 				end
 				function DropdownInit:GetOption()
 					return Dropdown.Container.Value.Text
