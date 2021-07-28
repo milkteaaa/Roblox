@@ -559,6 +559,7 @@ function Library:CreateWindow(Config, Parent)
 					function OptionInit:Remove()
 						Option:Destroy()
 						Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
+						Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y + Dropdown.Title.TextBounds.Y + 30)
 					end
 					return OptionInit
 				end
@@ -569,6 +570,7 @@ function Library:CreateWindow(Config, Parent)
 						end
 					end
 					Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
+					Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y + Dropdown.Title.TextBounds.Y + 30)
 				end
 				function DropdownInit:GetOption()
 					return Dropdown.Container.Value.Text
