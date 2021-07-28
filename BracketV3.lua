@@ -316,7 +316,7 @@ function Library:CreateWindow(Config, Parent)
 						end)
 					end
 				end
-				
+
 				if not Default then
 					function ToggleInit:SetState(State)
 						SetState(State)
@@ -480,7 +480,7 @@ function Library:CreateWindow(Config, Parent)
 						end)
 					end
 				end
-				SetValue(Default)
+
 				if not Default then
 					function SliderInit:SetValue(Value)
 						GlobalSliderValue = Value
@@ -491,6 +491,7 @@ function Library:CreateWindow(Config, Parent)
 				else
 					SetValue(DefaultLocal)
 				end
+				
 				function SliderInit:GetValue(Value)
 					return GlobalSliderValue
 				end
