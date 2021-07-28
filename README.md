@@ -37,8 +37,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/B
 ## BracketV3
 ```lua
 local Config = {
-	WindowName = "Example Library",
-	Color = Color3.fromRGB(255,128,0),
+    WindowName = "Example Library",
+	Color = Color3.fromRGB(255,128,64),
 	Keybind = Enum.KeyCode.RightBracket
 }
 
@@ -51,7 +51,7 @@ local Tab2 = Window:CreateTab("UI Settings")
 local Section1 = Tab1:CreateSection("First Section")
 local Section2 = Tab1:CreateSection("Second Section")
 local Section3 = Tab2:CreateSection("Menu")
---local Section4 = Tab2:CreateSection("Configuration")
+local Section4 = Tab2:CreateSection("Background")
 --local Section5 = Tab2:CreateSection("Misc")
 
 Section1:CreateLabel("Label 1")
@@ -61,7 +61,7 @@ local Button1 = Section1:CreateButton("Button 1", function()
 end)
 Button1:AddToolTip("Button 1 ToolTip")
 -------------
-local Toggle1 = Section1:CreateToggle("Toggle 1",nil, function(State)
+local Toggle1 = Section1:CreateToggle("Toggle 1", nil, function(State)
 	print(State)
 end)
 Toggle1:AddToolTip("Toggle 1 ToolTip")
@@ -137,21 +137,54 @@ Colorpicker2:UpdateColor(Color3.fromRGB(0,0,255))
 local Toggle3 = Section3:CreateToggle("UI Toggle", nil, function(State)
 	Window:Toggle(State)
 end)
-Toggle3:AddToolTip("Open/Close " .. Config.WindowName)
-Toggle3:SetState(true)
 Toggle3:CreateKeybind(tostring(Config.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
 	Config.Keybind = Enum.KeyCode[Key]
 end)
-local Slider3 = Section3:CreateSlider("Tile Size",0,1000,nil,true, function(Value)
-	Window:SetTileSize(Value)
-end)
-Slider3:AddToolTip("Set Background Tile Size")
-Slider3:SetValue(500)
+Toggle3:SetState(true)
+
 local Colorpicker3 = Section3:CreateColorpicker("UI Color", function(Color)
 	Window:ChangeColor(Color)
 end)
 Colorpicker3:UpdateColor(Config.Color)
-Colorpicker3:AddToolTip("Change library color")
+
+local Dropdown3 = Section4:CreateDropdown("Image")
+local Option7 = Dropdown3:AddOption("Default", function(String)
+	Window:SetBackground("2151741365")
+end)
+local Option8 = Dropdown3:AddOption("Hearts", function(String)
+	Window:SetBackground("6073763717")
+end)
+local Option9 = Dropdown3:AddOption("Abstract", function(String)
+	Window:SetBackground("6073743871")
+end)
+local Option10 = Dropdown3:AddOption("Hexagon", function(String)
+	Window:SetBackground("6073628839")
+end)
+local Option11 = Dropdown3:AddOption("Circles", function(String)
+	Window:SetBackground("6071579801")
+end)
+local Option12 = Dropdown3:AddOption("Lace With Flowers", function(String)
+	Window:SetBackground("6071575925")
+end)
+local Option13 = Dropdown3:AddOption("Floral", function(String)
+	Window:SetBackground("5553946656")
+end)
+Option7:SetOption()
+
+local Colorpicker4 = Section4:CreateColorpicker("Color", function(Color)
+	Window:SetBackgroundColor(Color)
+end)
+Colorpicker4:UpdateColor(Color3.new(1,1,1))
+
+local Slider3 = Section4:CreateSlider("Transparency",0,1,nil,false, function(Value)
+	Window:SetBackgroundTransparency(Value)
+end)
+Slider3:SetValue(0)
+
+local Slider4 = Section4:CreateSlider("Tile Scale",0,1,nil,false, function(Value)
+	Window:SetTileScale(Value)
+end)
+Slider4:SetValue(0.5)
 ```
 ## TPR:R Hax
 ```lua
