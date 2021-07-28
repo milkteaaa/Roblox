@@ -277,7 +277,7 @@ function Library:CreateWindow(Config, Parent)
 				return ButtonInit
 			end
 			function SectionInit:CreateToggle(Name, Default, Callback)
-				Default = Default or false
+				local DefaultLocal = Default or false
 				local ToggleInit = {}
 				local Toggle = Folder.Toggle:Clone()
 				Toggle.Name = Name .. " T"
@@ -297,7 +297,7 @@ function Library:CreateWindow(Config, Parent)
 					ToggleState = State
 					Callback(State)
 				end
-				SetState(Default)
+
 				Toggle.MouseButton1Click:Connect(function()
 					ToggleState = not ToggleState
 					SetState(ToggleState)
@@ -316,9 +316,13 @@ function Library:CreateWindow(Config, Parent)
 						end)
 					end
 				end
-
-				function ToggleInit:SetState(State)
-					SetState(State)
+				
+				if not Default then
+					function ToggleInit:SetState(State)
+						SetState(State)
+					end
+				else
+					SetState(DefaultLocal)
 				end
 
 				function ToggleInit:GetState(State)
@@ -383,7 +387,7 @@ function Library:CreateWindow(Config, Parent)
 				return ToggleInit
 			end
 			function SectionInit:CreateSlider(Name, Min, Max, Default, Precise, Callback)
-				Default = Default or 50
+				local DefaultLocal = Default or 50
 				local SliderInit = {}
 				local Slider = Folder.Slider:Clone()
 				Slider.Name = Name .. " S"
@@ -477,11 +481,15 @@ function Library:CreateWindow(Config, Parent)
 					end
 				end
 				SetValue(Default)
-				function SliderInit:SetValue(Value)
-					GlobalSliderValue = Value
-					Slider.Slider.Bar.Size = UDim2.new(Value / Max,0,1,0)
-					Slider.Value.PlaceholderText = Value
-					Callback(Value)
+				if not Default then
+					function SliderInit:SetValue(Value)
+						GlobalSliderValue = Value
+						Slider.Slider.Bar.Size = UDim2.new(Value / Max,0,1,0)
+						Slider.Value.PlaceholderText = Value
+						Callback(Value)
+					end
+				else
+					SetValue(DefaultLocal)
 				end
 				function SliderInit:GetValue(Value)
 					return GlobalSliderValue
