@@ -317,7 +317,7 @@ function Library:CreateWindow(Config, Parent)
 					end
 				end
 
-				if not Default then
+				if Default == nil then
 					function ToggleInit:SetState(State)
 						SetState(State)
 					end
@@ -481,7 +481,7 @@ function Library:CreateWindow(Config, Parent)
 					end
 				end
 
-				if not Default then
+				if Default == nil then
 					function SliderInit:SetValue(Value)
 						GlobalSliderValue = Value
 						Slider.Slider.Bar.Size = UDim2.new(Value / Max,0,1,0)
@@ -491,7 +491,7 @@ function Library:CreateWindow(Config, Parent)
 				else
 					SetValue(DefaultLocal)
 				end
-				
+
 				function SliderInit:GetValue(Value)
 					return GlobalSliderValue
 				end
