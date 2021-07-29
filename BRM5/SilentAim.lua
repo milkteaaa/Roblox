@@ -40,20 +40,20 @@ local Tab2 = Window:CreateTab("UI Settings")
 
 local Section1 = Tab1:CreateSection("Aimbot")
 local Section2 = Tab1:CreateSection("Circle")
-local Section3 = Tab2:CreateSection("Menu")
-local Section4 = Tab2:CreateSection("Background")
+local Section4 = Tab2:CreateSection("Menu")
+local Section5 = Tab2:CreateSection("Background")
 
-local Toggle1 = Section1:CreateToggle("Silent Aim", function(State)
+local Toggle1 = Section1:CreateToggle("Silent Aim", nil, function(State)
 	Config.SilentAim = State
 end)
 Toggle1:SetState(Config.SilentAim)
 -------------
-local Slider1 = Section1:CreateSlider("Field Of View", 0,500,true, function(Value)
+local Slider1 = Section1:CreateSlider("Field Of View", 0,500,nil,true, function(Value)
 	Config.FieldOfView = Value
 end)
 Slider1:SetValue(Config.FieldOfView)
 -------------
-local Slider2 = Section1:CreateSlider("Distance", 0,10000,true, function(Value)
+local Slider2 = Section1:CreateSlider("Distance", 0,10000,nil,true, function(Value)
 	Config.Distance = Value
 end)
 Slider2:SetValue(Config.Distance)
@@ -84,50 +84,53 @@ elseif Config.BodyPart = "Torso" then
 	Option4:SetOption()
 end
 -------------
-local Toggle2 = Section2:CreateToggle("Enable Circle", function(State)
+local Toggle2 = Section2:CreateToggle("Enable Circle", nil, function(State)
 	Config.CircleEnabled = State
 end)
 Toggle2:SetState(Config.CircleEnabled)
 -------------
-local Slider3 = Section2:CreateSlider("Circle Transparency", 0,1,false, function(Value)
+local Slider3 = Section2:CreateSlider("Circle Transparency", 0,1,nil,false, function(Value)
 	Config.CircleTransparency = Value
 end)
 Slider3:SetValue(Config.CircleTransparency)
 -------------
-local Colorpicker2 = Section2:CreateColorpicker("Circle Color", function(Color)
+local Colorpicker2 = Section2:CreateColorpicker("Circle Color", nil, function(Color)
 	Config.CircleColor = Color
 end)
 Colorpicker2:UpdateColor(Config.CircleColor)
 -------------
-local Slider4 = Section2:CreateSlider("Circle Thickness", 1,5,true, function(Value)
+local Slider4 = Section2:CreateSlider("Circle Thickness", 1,5,nil,true, function(Value)
 	Config.CircleThickness = Value
 end)
 Slider4:SetValue(25)
 
-local Slider5 = Section2:CreateSlider("Circle NumSides", 3,100,true, function(Value)
+local Slider5 = Section2:CreateSlider("Circle NumSides", 3,100,nil,true, function(Value)
 	Config.CircleNumSides = Value
 end)
 Slider5:SetValue(Config.CircleNumSides)
 
-local Toggle3 = Section2:CreateToggle("Circle Filled", function(State)
+local Toggle3 = Section2:CreateToggle("Circle Filled", nil, function(State)
 	Config.CircleFilled = State
 end)
 Toggle3:SetState(Config.CircleFilled)
 -------------
-local Toggle4 = Section3:CreateToggle("UI Toggle", function(State)
+
+
+local Toggle4 = Section4:CreateToggle("UI Toggle", nil, function(State)
 	Window:Toggle(State)
 end)
-Toggle4:CreateKeybind(tostring(Config.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
-	Config.Keybind = Enum.KeyCode[Key]
+Toggle4:CreateKeybind(tostring(UIConfig.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
+	UIConfig.Keybind = Enum.KeyCode[Key]
 end)
 Toggle4:SetState(true)
 
-local Colorpicker3 = Section3:CreateColorpicker("UI Color", function(Color)
+local Colorpicker3 = Section4:CreateColorpicker("UI Color", function(Color)
 	Window:ChangeColor(Color)
 end)
-Colorpicker3:UpdateColor(Config.Color)
+Colorpicker3:UpdateColor(UIConfig.Color)
 
-local Dropdown3 = Section4:CreateDropdown("Image")
+-- credits to jan for patterns
+local Dropdown3 = Section5:CreateDropdown("Image")
 local Option7 = Dropdown3:AddOption("Default", function(String)
 	Window:SetBackground("2151741365")
 end)
@@ -151,17 +154,17 @@ local Option13 = Dropdown3:AddOption("Floral", function(String)
 end)
 Option7:SetOption()
 
-local Colorpicker4 = Section4:CreateColorpicker("Color", function(Color)
+local Colorpicker4 = Section5:CreateColorpicker("Color", function(Color)
 	Window:SetBackgroundColor(Color)
 end)
 Colorpicker4:UpdateColor(Color3.new(1,1,1))
 
-local Slider6 = Section4:CreateSlider("Transparency",0,1,false, function(Value)
+local Slider6 = Section5:CreateSlider("Transparency",0,1,nil,false, function(Value)
 	Window:SetBackgroundTransparency(Value)
 end)
 Slider6:SetValue(0)
 
-local Slider7 = Section4:CreateSlider("Tile Scale",0,1,false, function(Value)
+local Slider7 = Section5:CreateSlider("Tile Scale",0,1,nil,false, function(Value)
 	Window:SetTileScale(Value)
 end)
 Slider7:SetValue(0.5)
