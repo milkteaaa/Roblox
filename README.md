@@ -3,33 +3,19 @@
 ## BRM 5 Silent Aim
 ```lua
 getgenv().Config = {
-	CircleEnabled = false,
-	CircleTransparency = 0.25,
-	CircleColor = Color3.fromRGB(255,255,255),
-	CircleThickness = 1.5,
+	CircleEnabled = true,
+	CircleTransparency = 1,
+	CircleColor = Color3.fromRGB(255,128,0),
+
+	CircleThickness = 1,
 	CircleNumSides = 30,
 	CircleFilled = false,
 
-	TracerEnabled = false,
-	TracerTransparency = 0.25,
-	TracerColor = Color3.fromRGB(255,0,0),
-	TracerThickness = 2,
-
-	InfoEnabled = false,
-	InfoDistance = false,
-	InfoPosition = Vector2.new(0,25),
-	InfoTransparency = 0.25,
-	InfoSize = 20,
-	InfoOutline = false,
-	InfoFont = 1,
-
-	SilentAim = false,
-	VisibiltyCheck = false,
+	SilentAim = true,
 	FieldOfView = 100,
 	Distance = 1000,
 	TargetMode = "NPC",
-	BodyPart = "Head",
-	FieldOfViewMode = "Cursor"
+	BodyPart = "Head"
 }
 -- github.com/AlexR32/Roblox
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
