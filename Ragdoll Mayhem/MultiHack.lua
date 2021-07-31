@@ -5,9 +5,10 @@ local PlayerService = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = PlayerService.LocalPlayer
 local Camera = Workspace.CurrentCamera
-
-local PlayerFolder = Workspace.LiveRagdolls
-
+if not Workspace:FindFirstChild("Projectiles") and not Workspace:FindFirstChild("Drops") and not Workspace:FindFirstChild("WaterColPart") then
+    warn("Update needed dev renamed god damn shit")
+    return
+end
 if not getgenv().Config then
 getgenv().Config = {
 
@@ -266,7 +267,7 @@ local function GetCorners(Model)
     return xMax - xMin,yMax - yMin,xMin,yMin,xMax,yMax
 end
 
-local function CreateESP(Model, Info)
+local function CreateESP(Model)
     local Text = Drawing.new("Text")
     local HealthbarOutline = Drawing.new("Square")
     local Healthbar = Drawing.new("Square")
@@ -285,7 +286,7 @@ local function CreateESP(Model, Info)
                         Text.Visible = Config.TextVisible
                         Text.Transparency = 1
                         Text.Color = Color3.fromRGB(255,255,255)
-                        Text.Text = tostring(Info) .. "\n" .. math.round((LocalPlayer.Character[Config.ESPPlayerPart].Position - Model[Config.ESPModelPart].Position).Magnitude) .. " studs"
+                        Text.Text = Model.Name .. "\n" .. math.round((LocalPlayer.Character[Config.ESPPlayerPart].Position - Model[Config.ESPModelPart].Position).Magnitude) .. " studs"
                         Text.Size = 20
                         Text.Center = true
                         Text.Outline = Config.OutlineVisible
@@ -409,9 +410,8 @@ end
 local function returnHit(hit, args)
     Camera = Workspace.CurrentCamera
     CameraPosition = Camera.CFrame.Position
-    if table.find(args[2], LocalPlayer.Character, 1) and not table.find(args[2], Workspace.WaterLayer, 2) and not table.find(args[2], Workspace.LiveRagdolls, 3) then
-        --table.foreach(args[2], print)
-        args[1] = Ray.new(args[1].Origin, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10))
+    if table.find(args[2],LocalPlayer.Character,1) and table.find(args[2],Workspace.Drops,2) and table.find(args[2],Workspace.Projectiles,4) and table.find(args[2],Workspace.WaterColPart,5) then
+        args[1] = Ray.new(CameraPosition, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / 500, 0) - CameraPosition).Unit * 500)
         return
     end
 end
@@ -441,6 +441,7 @@ RunService.RenderStepped:Connect(function()
 
     if Config.SilentAim then
         hit = GetTarget()
+        print(hit)
     else
         hit = nil
     end
@@ -478,22 +479,32 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-for _, Player in pairs(PlayerFolder:GetChildren()) do
+for _, Player in pairs(PlayerService:GetPlayers()) do
     if Player.Name ~= LocalPlayer.Name then
-        if Player:WaitForChild("Humanoid", 5) then
-            if Player.Humanoid.Health ~= 0 then
-                CreateESP(Player, Player.Name)
+        if Player.Character:WaitForChild("Humanoid") then
+            if Player.Character.Humanoid.Health ~= 0 then
+                CreateESP(Player.Character)
             end
         end
+
+        Player.CharacterAdded:Connect(function(Character)
+            if Character:WaitForChild("Humanoid") then
+                if Character.Humanoid.Health ~= 0 then
+                    CreateESP(Character)
+                end
+            end
+        end)
     end
 end
 
-PlayerFolder.ChildAdded:Connect(function(Player)
+PlayerService.PlayerAdded:Connect(function(Player)
     if Player.Name ~= LocalPlayer.Name then
-        if Player:WaitForChild("Humanoid", 5) then
-            if Player.Humanoid.Health ~= 0 then
-                CreateESP(Player, Player.Name)
+        Player.CharacterAdded:Connect(function(Character)
+            if Character:WaitForChild("Humanoid") then
+                if Character.Humanoid.Health ~= 0 then
+                    CreateESP(Character)
+                end
             end
-        end
+        end)
     end
 end)
