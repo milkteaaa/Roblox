@@ -4,26 +4,24 @@ local Workspace = game:GetService("Workspace")
 
 local PlayerService = game:GetService("Players")
 local LocalPlayer = PlayerService.LocalPlayer
-local Camera = Workspace.CurrentCamera
 
 local NPCFolder = Workspace.Custom:FindFirstChild("-1") or Workspace.Custom:FindFirstChild("1")
 
 if not getgenv().Config then
-	getgenv().Config = {
-		CircleEnabled = true,
-		CircleTransparency = 1,
-		CircleColor = Color3.fromRGB(255,128,0),
+getgenv().Config = {
+	CircleVisible = true,
+	CircleTransparency = 1,
+	CircleColor = Color3.fromRGB(255,128,64),
+	CircleThickness = 1,
+	CircleNumSides = 30,
+	CircleFilled = false,
 
-		CircleThickness = 1,
-		CircleNumSides = 30,
-		CircleFilled = false,
-
-		SilentAim = true,
-		FieldOfView = 100,
-		Distance = 1000,
-		TargetMode = "NPC",
-		BodyPart = "Head"
-	}
+	SilentAim = true,
+	TeamCheck = false,
+	FieldOfView = 100,
+	TargetMode = "NPC",
+	AimHitbox = "Head"
+}
 end
 
 local UIConfig = {
@@ -33,192 +31,169 @@ local UIConfig = {
 }
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BracketV3.lua"))()
-local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
+local Window = Library:CreateWindow(UIConfig, game:GetService("CoreGui"))
 
-local Tab1 = Window:CreateTab("Main")
-local Tab2 = Window:CreateTab("UI Settings")
+local MainTab = Window:CreateTab("Main")
+local UITab = Window:CreateTab("UI Settings")
 
-local Section1 = Tab1:CreateSection("Aimbot")
-local Section2 = Tab1:CreateSection("Circle")
-local Section4 = Tab2:CreateSection("Menu")
-local Section5 = Tab2:CreateSection("Background")
+local AimbotSection = MainTab:CreateSection("Aimbot")
+local CircleSection = MainTab:CreateSection("Circle")
+local MenuSection = UITab:CreateSection("Menu")
+local BackgroundSection = UITab:CreateSection("Background")
 
-local Toggle1 = Section1:CreateToggle("Silent Aim", nil, function(State)
+local SilentAimToggle = AimbotSection:CreateToggle("Silent Aim", nil, function(State)
 	Config.SilentAim = State
 end)
-Toggle1:SetState(Config.SilentAim)
--------------
-local Slider1 = Section1:CreateSlider("Field Of View", 0,500,nil,true, function(Value)
+SilentAimToggle:SetState(Config.SilentAim)
+
+local TeamCheckToggle = AimbotSection:CreateToggle("Team Check", nil, function(State)
+	Config.TeamCheck = State
+end)
+TeamCheckToggle:SetState(Config.TeamCheck)
+
+local FoVSlider = AimbotSection:CreateSlider("Field Of View", 0,1000,nil,true, function(Value)
 	Config.FieldOfView = Value
 end)
-Slider1:SetValue(Config.FieldOfView)
--------------
-local Slider2 = Section1:CreateSlider("Distance", 0,10000,nil,true, function(Value)
-	Config.Distance = Value
-end)
-Slider2:SetValue(Config.Distance)
--------------
-local Dropdown1 = Section1:CreateDropdown("Target")
-local Option1 = Dropdown1:AddOption("NPC", function(String)
+FoVSlider:SetValue(Config.FieldOfView)
+
+local TargetDropdown = AimbotSection:CreateDropdown("Target")
+
+local NPCOption = TargetDropdown:AddOption("NPC", function(String)
 	Config.TargetMode = "NPC"
 end)
-local Option2 = Dropdown1:AddOption("Player", function(String)
+
+local PlayerOption = TargetDropdown:AddOption("Player", function(String)
 	Config.TargetMode = "Player"
 end)
+
 if Config.TargetMode == "NPC" then
-	Option1:SetOption()
-elseif Config.TargetMode == "Player" then
-	Option2:SetOption()
+	NPCOption:SetOption()
+else
+	PlayerOption:SetOption()
 end
--------------
-local Dropdown2 = Section1:CreateDropdown("Aim Part")
-local Option3 = Dropdown2:AddOption("Head", function(String)
-	Config.BodyPart = "Head"
+
+local AimHitboxDropdown = AimbotSection:CreateDropdown("Aim Hitbox")
+local HeadOption = AimHitboxDropdown:AddOption("Head", function(String)
+	Config.AimHitbox = "Head"
 end)
-local Option4 = Dropdown2:AddOption("Torso", function(String)
-	Config.BodyPart = "Torso"
+local TorsoOption = AimHitboxDropdown:AddOption("Torso", function(String)
+	Config.AimHitbox = "Torso"
 end)
-if Config.BodyPart = "Head" then
-	Option3:SetOption()
-elseif Config.BodyPart = "Torso" then
-	Option4:SetOption()
+
+if Config.AimHitbox == "Head" then
+	HeadOption:SetOption()
+else
+	TorsoOption:SetOption()
 end
--------------
-local Toggle2 = Section2:CreateToggle("Enable Circle", nil, function(State)
-	Config.CircleEnabled = State
+
+
+local CircleVisibleToggle = CircleSection:CreateToggle("Enable Circle", nil, function(State)
+	Config.CircleVisible = State
 end)
-Toggle2:SetState(Config.CircleEnabled)
--------------
-local Slider3 = Section2:CreateSlider("Circle Transparency", 0,1,nil,false, function(Value)
+CircleVisibleToggle:SetState(Config.CircleVisible)
+
+local CircleTransparencySlider = CircleSection:CreateSlider("Circle Transparency", 0,1,nil,false, function(Value)
 	Config.CircleTransparency = Value
 end)
-Slider3:SetValue(Config.CircleTransparency)
--------------
-local Colorpicker2 = Section2:CreateColorpicker("Circle Color", nil, function(Color)
+CircleTransparencySlider:SetValue(Config.CircleTransparency)
+
+local CircleColorpicker = CircleSection:CreateColorpicker("Circle Color", function(Color)
 	Config.CircleColor = Color
 end)
-Colorpicker2:UpdateColor(Config.CircleColor)
--------------
-local Slider4 = Section2:CreateSlider("Circle Thickness", 1,5,nil,true, function(Value)
+CircleColorpicker:UpdateColor(Config.CircleColor)
+
+local CircleThicknessSlider = CircleSection:CreateSlider("Circle Thickness", 1,5,nil,true, function(Value)
 	Config.CircleThickness = Value
 end)
-Slider4:SetValue(25)
+CircleThicknessSlider:SetValue(Config.CircleThickness)
 
-local Slider5 = Section2:CreateSlider("Circle NumSides", 3,100,nil,true, function(Value)
+local CircleNumSidesSlider = CircleSection:CreateSlider("Circle NumSides", 3,100,nil,true, function(Value)
 	Config.CircleNumSides = Value
 end)
-Slider5:SetValue(Config.CircleNumSides)
+CircleNumSidesSlider:SetValue(Config.CircleNumSides)
 
-local Toggle3 = Section2:CreateToggle("Circle Filled", nil, function(State)
+local CircleFilledToggle = CircleSection:CreateToggle("Circle Filled", nil, function(State)
 	Config.CircleFilled = State
 end)
-Toggle3:SetState(Config.CircleFilled)
--------------
+CircleFilledToggle:SetState(Config.CircleFilled)
 
 
-local Toggle4 = Section4:CreateToggle("UI Toggle", nil, function(State)
+local UIToggle = MenuSection:CreateToggle("UI Toggle", nil, function(State)
 	Window:Toggle(State)
 end)
-Toggle4:CreateKeybind(tostring(UIConfig.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
+UIToggle:CreateKeybind(tostring(UIConfig.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
 	UIConfig.Keybind = Enum.KeyCode[Key]
 end)
-Toggle4:SetState(true)
+UIToggle:SetState(false)
 
-local Colorpicker3 = Section4:CreateColorpicker("UI Color", function(Color)
+local UIColor = MenuSection:CreateColorpicker("UI Color", function(Color)
 	Window:ChangeColor(Color)
 end)
-Colorpicker3:UpdateColor(UIConfig.Color)
+UIColor:UpdateColor(UIConfig.Color)
 
 -- credits to jan for patterns
-local Dropdown3 = Section5:CreateDropdown("Image")
-local Option7 = Dropdown3:AddOption("Default", function(String)
+local PatternDropdown = BackgroundSection:CreateDropdown("Image")
+local DefaultPattern = PatternDropdown:AddOption("Default", function(String)
 	Window:SetBackground("2151741365")
 end)
-local Option8 = Dropdown3:AddOption("Hearts", function(String)
+local HeartsPattern = PatternDropdown:AddOption("Hearts", function(String)
 	Window:SetBackground("6073763717")
 end)
-local Option9 = Dropdown3:AddOption("Abstract", function(String)
+local AbstractPattern = PatternDropdown:AddOption("Abstract", function(String)
 	Window:SetBackground("6073743871")
 end)
-local Option10 = Dropdown3:AddOption("Hexagon", function(String)
+local HexagonPattern = PatternDropdown:AddOption("Hexagon", function(String)
 	Window:SetBackground("6073628839")
 end)
-local Option11 = Dropdown3:AddOption("Circles", function(String)
+local CirclesPattern = PatternDropdown:AddOption("Circles", function(String)
 	Window:SetBackground("6071579801")
 end)
-local Option12 = Dropdown3:AddOption("Lace With Flowers", function(String)
+local LacePattern = PatternDropdown:AddOption("Lace With Flowers", function(String)
 	Window:SetBackground("6071575925")
 end)
-local Option13 = Dropdown3:AddOption("Floral", function(String)
+local FloralPattern = PatternDropdown:AddOption("Floral", function(String)
 	Window:SetBackground("5553946656")
 end)
-Option7:SetOption()
+DefaultPattern:SetOption()
 
-local Colorpicker4 = Section5:CreateColorpicker("Color", function(Color)
+local BackgroundColorpicker = BackgroundSection:CreateColorpicker("Color", function(Color)
 	Window:SetBackgroundColor(Color)
 end)
-Colorpicker4:UpdateColor(Color3.new(1,1,1))
+BackgroundColorpicker:UpdateColor(Color3.new(1,1,1))
 
-local Slider6 = Section5:CreateSlider("Transparency",0,1,nil,false, function(Value)
+local BackgroundTransparencySlider = BackgroundSection:CreateSlider("Transparency",0,1,nil,false, function(Value)
 	Window:SetBackgroundTransparency(Value)
 end)
-Slider6:SetValue(0)
+BackgroundTransparencySlider:SetValue(0)
 
-local Slider7 = Section5:CreateSlider("Tile Scale",0,1,nil,false, function(Value)
+local TileSizeSlider = BackgroundSection:CreateSlider("Tile Scale",0,1,nil,false, function(Value)
 	Window:SetTileScale(Value)
 end)
-Slider7:SetValue(0.5)
+TileSizeSlider:SetValue(0.5)
 
--- functions
-local function returnCharacter(Target)
-	if Target then
-		if Target:IsA("Player") and Target.Character then
-			return Workspace:FindFirstChild(Target.Name)
-		else
-			return Target
-		end
-	end
-end
-
-local function returnTeam(Target)
-	if LocalPlayer.TeamColor ~= Target.TeamColor then
-		return true
-	else
-		return false
-	end
-	return true
-end
-
-local function returnHealth(Target)
-	if returnCharacter(Target) then
-		local TargetCharacter = returnCharacter(Target)
-		if TargetCharacter:FindFirstChildOfClass("Humanoid") and TargetCharacter:FindFirstChildOfClass("Humanoid").Health >= 0 then
-			return true
-		else
-			return false
-		end
-	end
-	return true
+local function TeamCheck(Target)
+    if Config.TeamCheck then
+        if LocalPlayer.Team ~= Target.Team then
+            return true
+        else
+            return false
+        end
+    end
+    return true
 end
 
 function GetTarget()
-	local ClosestTarget = math.huge
-	local Target = nil
+	local Camera = Workspace.CurrentCamera
 	if Config.TargetMode == "NPC" then
 		if NPCFolder then
-			for _, NPC in pairs(NPCFolder:GetChildren()) do -- get all npcs
-				if NPC:FindFirstChildOfClass("Humanoid") and not NPC:FindFirstChildOfClass("Humanoid"):FindFirstChild("Free") then -- get rid of hostages
-					if NPC:FindFirstChildOfClass("Humanoid") and NPC:FindFirstChildOfClass("Humanoid").Health >= 0 then -- check health
-						local Vector, InViewport = Camera:WorldToViewportPoint(NPC:FindFirstChild(Config.BodyPart).Position)
-						if InViewport then
-							local CameraPosition = Camera.CFrame.Position
-							if Workspace:FindPartOnRayWithIgnoreList(Ray.new(CameraPosition, (NPC:FindFirstChild(Config.BodyPart).Position - CameraPosition).Unit * Config.Distance), {NPC}) then
-								local DistanceMagnitude = (LocalPlayer.Character:FindFirstChild(Config.BodyPart).Position - NPC:FindFirstChild(Config.BodyPart).Position).Magnitude
-								local VectorMagnitude = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(Vector.X, Vector.Y)).Magnitude
-								if VectorMagnitude < ClosestTarget and VectorMagnitude <= Config.FieldOfView and DistanceMagnitude <= Config.Distance then
-									Target = NPC:FindFirstChild(Config.BodyPart)
-									ClosestTarget = VectorMagnitude
-								end
+			for _, NPC in pairs(NPCFolder:GetChildren()) do
+				if NPC:FindFirstChildOfClass("Humanoid") and not NPC:FindFirstChildOfClass("Humanoid"):FindFirstChild("Free") and NPC:FindFirstChild(Config.AimHitbox) then
+					if NPC:FindFirstChildOfClass("Humanoid") and NPC:FindFirstChildOfClass("Humanoid").Health ~= 0 then
+						local Vector, OnScreen = Camera:WorldToViewportPoint(NPC:FindFirstChild(Config.AimHitbox).Position)
+						if OnScreen then
+							local VectorMagnitude = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(Vector.X, Vector.Y)).Magnitude
+							if VectorMagnitude <= Config.FieldOfView then
+								return NPC:FindFirstChild(Config.AimHitbox)
 							end
 						end
 					end
@@ -226,20 +201,15 @@ function GetTarget()
 			end
 		end
 	elseif Config.TargetMode == "Player" then
-		for _, Player in pairs(PlayerService:GetChildren()) do
-			if Player ~= LocalPlayer and Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") then
-				if Player.Chracter.Humanoid.Health >= 0 then
-					if Player.Team ~= LocalPlayer.Team then
-						local Vector, InViewport = Camera:WorldToViewportPoint(Player.Character:FindFirstChild(Config.BodyPart).Position)
-						if InViewport then
-							local CameraPosition = Camera.CFrame.Position
-							if Workspace:FindPartOnRayWithIgnoreList(Ray.new(CameraPosition, (Player.Character:FindFirstChild(Config.BodyPart).Position - CameraPosition).Unit * Config.Distance), {Player}) then
-								local DistanceMagnitude = (LocalPlayer.Character:FindFirstChild(Config.BodyPart).Position - Player.Character:FindFirstChild(Config.BodyPart).Position).Magnitude
-								local VectorMagnitude = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(Vector.X, Vector.Y)).Magnitude
-								if VectorMagnitude < ClosestTarget and VectorMagnitude <= Config.FieldOfView and DistanceMagnitude <= Config.Distance then
-									Target = Player.Character:FindFirstChild(Config.BodyPart)
-									ClosestTarget = VectorMagnitude
-								end
+		for _, Player in pairs(PlayerService:GetPlayers()) do
+			if Player ~= LocalPlayer and TeamCheck(Player) then
+				if Player.Character and Player.Character:FindFirstChild(Config.AimHitbox) then
+					if Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChildOfClass("Humanoid").Health ~= 0 then
+						local Vector, OnScreen = Camera:WorldToViewportPoint(Player.Character:FindFirstChild(Config.AimHitbox).Position)
+						if OnScreen then
+							local VectorMagnitude = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(Vector.X, Vector.Y)).Magnitude
+							if VectorMagnitude <= Config.FieldOfView then
+								return Player.Character:FindFirstChild(Config.AimHitbox)
 							end
 						end
 					end
@@ -247,53 +217,49 @@ function GetTarget()
 			end
 		end
 	end
-	return Target
 end
 
 -- silent aim
 local function returnHit(hit, args)
-	CameraPosition = Camera.CFrame.Position
-	if args[2].Origin == CameraPosition then
-		args[2] = Ray.new(args[2].Origin, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / Config.Distance, 0) - CameraPosition).Unit * (Config.Distance * 10))
+	local Camera = Workspace.CurrentCamera
+	local CameraPosition = Camera.CFrame.Position
+	if args[1].Origin == CameraPosition then
+		--args[1] = Ray.new(args[1].Origin, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / 500, 0) - CameraPosition).Unit * 500)
+		args[1] = Ray.new(CameraPosition, (hit.Position - CameraPosition))
 		return
 	end
 end
 
-local rawmetatable = getrawmetatable(game)
-local old
-
-setreadonly(rawmetatable, false)
-old = hookfunction(rawmetatable.__namecall, function(...)
-	local namecallmethod = getnamecallmethod()
-	local args = {...}
-	if namecallmethod == "FindPartOnRayWithIgnoreList" then
-		if hit then
-			returnHit(hit, args)
-		end
-	end
-	return old(unpack(args))
+namecall = hookmetamethod(game, "__namecall", function(self, ...)
+    local namecallmethod = getnamecallmethod()
+    local args = {...}
+    if namecallmethod == "FindPartOnRayWithIgnoreList" then
+        if hit then
+            returnHit(hit, args)
+        end
+    end
+    return namecall(self, unpack(args))
 end)
-setreadonly(rawmetatable, true)
 
 RunService.Heartbeat:Connect(function()
+	print(GetTarget())
 	if Config.SilentAim then
 		hit = GetTarget()
 	else
 		hit = nil
 	end
 end)
+
 -- circle
 local Circle = Drawing.new("Circle")
 RunService.Heartbeat:Connect(function()
-	if Circle then
-		Circle.Visible = Config.CircleEnabled
-		Circle.Transparency = Config.CircleTransparency
-		Circle.Color = Config.CircleColor
+    Circle.Visible = Config.CircleVisible
+    Circle.Transparency = Config.CircleTransparency
+    Circle.Color = Config.CircleColor
 
-		Circle.Thickness = Config.CircleThickness
-		Circle.NumSides = Config.CircleNumSides
-		Circle.Radius = Config.FieldOfView
-		Circle.Filled = Config.CircleFilled
-		Circle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
-	end
+    Circle.Thickness = Config.CircleThickness
+    Circle.NumSides = Config.CircleNumSides
+    Circle.Radius = Config.FieldOfView
+    Circle.Filled = Config.CircleFilled
+    Circle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
 end)
