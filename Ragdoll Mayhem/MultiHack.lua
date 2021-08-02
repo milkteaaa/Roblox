@@ -412,7 +412,6 @@ namecall = hookmetamethod(game, "__namecall", function(self, ...)
 end)
 
 RunService.RenderStepped:Connect(function()
-    print(GetTarget())
     if Config.SilentAim then
         hit = GetTarget()
     else
