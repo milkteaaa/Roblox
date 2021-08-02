@@ -4,15 +4,16 @@ local RunService = game:GetService("RunService")
 local PlayerService = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = PlayerService.LocalPlayer
-local Camera = Workspace.CurrentCamera
+
 if not Workspace:FindFirstChild("Projectiles") and not Workspace:FindFirstChild("Drops") and not Workspace:FindFirstChild("WaterColPart") then
-    warn("Update needed dev renamed god damn shit")
+    warn("Cant execute the script, update needed\nLightning Splash probably renamed something")
     return
 end
+
 if not getgenv().Config then
 getgenv().Config = {
 
-    -- fov circle
+    -- FoV Circle
     CircleVisible = true,
     CircleTransparency = 1,
     CircleColor = Color3.fromRGB(255,128,255),
@@ -21,27 +22,23 @@ getgenv().Config = {
     CircleFilled = false,
     CircleRainbow = false,
 
-    -- box, player names and health bar (not really useful for this game)
+    -- ESP
     OutlineVisible = true,
     TextVisible = true,
     HealthbarVisible = false,
     BoxVisible = true,
+    Color = Color3.fromRGB(255,128,255),
+    Rainbow = false,
 
-    Color = Color3.fromRGB(255,128,255), -- disable rainbow before using
-    Rainbow = false, -- rainbow boxes yay
-
-    -- Aimbot and Silent Aim related things
+    -- Aimbot and Silent Aim
     Aimbot = false,
     Sensitivity = 0.5,
+
     SilentAim = true,
+
     TeamCheck = false,
     FieldOfView = 100,
-    Distance = 1000, -- this related to esp too
-    AimPart = "Head",
-
-    -- dont touch
-    ESPPlayerPart = "Torso",
-    ESPModelPart = "Torso"
+    AimHitbox = "Head"
 }
 end
 
@@ -87,23 +84,19 @@ local FOVSlider = Section1:CreateSlider("Field Of View", 0,500,nil,true, functio
     Config.FieldOfView = Value
 end)
 FOVSlider:SetValue(Config.FieldOfView)
+FOVSlider:AddToolTip("100 is recommended for silent aim\n100 or more recommended for aimbot")
 
-local DistanceSlider = Section1:CreateSlider("Distance", 0,5000,nil,true, function(Value)
-    Config.Distance = Value
+local AimHitboxDropdown = Section1:CreateDropdown("Aim Part")
+local HeadOption = AimHitboxDropdown:AddOption("Head", function(String)
+    Config.AimHitbox = String
 end)
-DistanceSlider:SetValue(Config.Distance)
-
-local AimPartDropdown = Section1:CreateDropdown("Aim Part")
-local HeadOption = AimPartDropdown:AddOption("Head", function(String)
-    Config.AimPart = String
-end)
-local TorsoOption = AimPartDropdown:AddOption("Torso", function(String)
-    Config.AimPart = String
+local TorsoOption = AimHitboxDropdown:AddOption("Torso", function(String)
+    Config.AimHitbox = String
 end)
 
-if Config.AimPart == "Head" then
+if Config.AimHitbox == "Head" then
     HeadOption:SetOption()
-elseif Config.AimPart == "Torso" then
+elseif Config.AimHitbox == "Torso" then
     TorsoOption:SetOption()
 end
 
@@ -229,6 +222,17 @@ local Slider4 = Section5:CreateSlider("Tile Scale",0,1,nil,false, function(Value
 end)
 Slider4:SetValue(0.5)
 
+local function TeamCheck(Target)
+    if Config.TeamCheck then
+        if LocalPlayer.Team ~= Target.Team then
+            return true
+        else
+            return false
+        end
+    end
+    return true
+end
+
 local function GetCorners(Model)
     local CFrame, Size = Model:GetBoundingBox()
     local CornerTable = {
@@ -275,18 +279,18 @@ local function CreateESP(Model)
     local Box = Drawing.new("Square")
 
     local Render = RunService.RenderStepped:Connect(function()
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild(Config.ESPPlayerPart) then
-            if Model and Model:FindFirstChild(Config.ESPModelPart) then
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Torso") then
+            if Model and Model:FindFirstChild("Torso") then
                 if Model:FindFirstChildOfClass("Humanoid") and Model:FindFirstChildOfClass("Humanoid").Health ~= 0 then
                     Camera = Workspace.CurrentCamera
-                    local Vector, OnScreen = Camera:WorldToViewportPoint(Model[Config.ESPModelPart].Position)
+                    local Vector, OnScreen = Camera:WorldToViewportPoint(Model.Torso.Position)
                     if OnScreen then
                         local xSize,ySize,xMin,yMin,xMax,yMax = GetCorners(Model)
 
                         Text.Visible = Config.TextVisible
                         Text.Transparency = 1
                         Text.Color = Color3.fromRGB(255,255,255)
-                        Text.Text = Model.Name .. "\n" .. math.round((LocalPlayer.Character[Config.ESPPlayerPart].Position - Model[Config.ESPModelPart].Position).Magnitude) .. " studs"
+                        Text.Text = Model.Name .. "\n" .. math.round((LocalPlayer.Character.Torso.Position - Model.Torso.Position).Magnitude) .. " studs"
                         Text.Size = 20
                         Text.Center = true
                         Text.Outline = Config.OutlineVisible
@@ -350,7 +354,6 @@ local function CreateESP(Model)
                 Box.Visible = false
             end
         else
-            warn("BoxESP: ModelPart.Parent ~= Model")
             Text.Visible = false
             HealthbarOutline.Visible = false
             Healthbar.Visible = false
@@ -371,47 +374,28 @@ local function CreateESP(Model)
     end)
 end
 
-local function TeamCheck(Target)
-    if Config.TeamCheck then
-        if LocalPlayer.Team ~= Target.Team then
-            return true
-        else
-            return false
-        end
-    end
-    return true
-end
-
 local function GetTarget()
-    local ClosestTarget = math.huge
-    local Target = nil
-    for _, Player in pairs(PlayerService:GetPlayers()) do
-        if Player ~= LocalPlayer and Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") then
-            if TeamCheck(Player) and Player.Character:FindFirstChildOfClass("Humanoid").Health ~= 0 then
-                Camera = Workspace.CurrentCamera
-                local Vector, OnScreen = Camera:WorldToViewportPoint(Player.Character:FindFirstChild(Config.AimPart).Position)
-                if OnScreen then
-                    local CameraPosition = Camera.CFrame.Position
-                    if Workspace:FindPartOnRayWithIgnoreList(Ray.new(CameraPosition, (Player.Character:FindFirstChild(Config.AimPart).Position - CameraPosition).Unit * Config.Distance), {Player}) then
-                        local DistanceMagnitude = (LocalPlayer.Character:FindFirstChild(Config.AimPart).Position - Player.Character:FindFirstChild(Config.AimPart).Position).Magnitude
-                        local VectorMagnitude = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(Vector.X, Vector.Y)).Magnitude
-                        if VectorMagnitude < ClosestTarget and VectorMagnitude <= Config.FieldOfView and DistanceMagnitude <= Config.Distance then
-                            Target = Player.Character:FindFirstChild(Config.AimPart)
-                            ClosestTarget = VectorMagnitude
-                        end
-                    end
-                end
-            end
-        end
-    end
-    return Target
+	local Camera = Workspace.CurrentCamera
+	for _, Player in pairs(PlayerService:GetPlayers()) do
+		if Player ~= LocalPlayer and TeamCheck(Player) then
+			if Player.Character and Player.Character:FindFirstChild(Config.AimHitbox) then
+				if Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChildOfClass("Humanoid").Health ~= 0 then
+					local Vector, OnScreen = Camera:WorldToViewportPoint(Player.Character:FindFirstChild(Config.AimHitbox).Position)
+					if OnScreen then
+						local VectorMagnitude = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(Vector.X, Vector.Y)).Magnitude
+						if VectorMagnitude <= Config.FieldOfView then
+							return Player.Character:FindFirstChild(Config.AimHitbox)
+						end
+					end
+				end
+			end
+		end
+	end
 end
 
 local function returnHit(hit, args)
-    Camera = Workspace.CurrentCamera
-    CameraPosition = Camera.CFrame.Position
     if table.find(args[2],LocalPlayer.Character,1) and table.find(args[2],Workspace.Drops,2) and table.find(args[2],Workspace.Projectiles,4) and table.find(args[2],Workspace.WaterColPart,5) then
-        args[1] = Ray.new(CameraPosition, (hit.Position + Vector3.new(0, (CameraPosition - hit.Position).Magnitude / 500, 0) - CameraPosition).Unit * 500)
+        args[1] = Ray.new(args[1].Origin, (hit.Position + Vector3.new(0, (args[1].Origin - hit.Position).Magnitude / 500, 0) - args[1].Origin).Unit * 500)
         return
     end
 end
@@ -428,6 +412,13 @@ namecall = hookmetamethod(game, "__namecall", function(self, ...)
 end)
 
 RunService.RenderStepped:Connect(function()
+    print(GetTarget())
+    if Config.SilentAim then
+        hit = GetTarget()
+    else
+        hit = nil
+    end
+
     if Config.Aimbot then
         if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) then
             local Target = GetTarget()
@@ -437,13 +428,6 @@ RunService.RenderStepped:Connect(function()
                 mousemoverel((TargetPos.X - Mouse.X) * Config.Sensitivity, (TargetPos.Y - Mouse.Y) * Config.Sensitivity)
             end
         end
-    end
-
-    if Config.SilentAim then
-        hit = GetTarget()
-        print(hit)
-    else
-        hit = nil
     end
 end)
 
@@ -481,18 +465,9 @@ end)
 
 for _, Player in pairs(PlayerService:GetPlayers()) do
     if Player.Name ~= LocalPlayer.Name then
-        if Player.Character:WaitForChild("Humanoid") then
-            if Player.Character.Humanoid.Health ~= 0 then
-                CreateESP(Player.Character)
-            end
-        end
-
+        CreateESP(Player.Character)
         Player.CharacterAdded:Connect(function(Character)
-            if Character:WaitForChild("Humanoid") then
-                if Character.Humanoid.Health ~= 0 then
-                    CreateESP(Character)
-                end
-            end
+            CreateESP(Character)
         end)
     end
 end
@@ -500,11 +475,7 @@ end
 PlayerService.PlayerAdded:Connect(function(Player)
     if Player.Name ~= LocalPlayer.Name then
         Player.CharacterAdded:Connect(function(Character)
-            if Character:WaitForChild("Humanoid") then
-                if Character.Humanoid.Health ~= 0 then
-                    CreateESP(Character)
-                end
-            end
+            CreateESP(Character)
         end)
     end
 end)
