@@ -1,25 +1,4 @@
 # Roblox
-
-## BRM 5 Silent Aim
-```lua
-getgenv().Config = {
-	CircleEnabled = true,
-	CircleTransparency = 1,
-	CircleColor = Color3.fromRGB(255,128,0),
-
-	CircleThickness = 1,
-	CircleNumSides = 30,
-	CircleFilled = false,
-
-	SilentAim = true,
-	FieldOfView = 100,
-	Distance = 1000,
-	TargetMode = "NPC",
-	BodyPart = "Head"
-}
--- github.com/AlexR32/Roblox
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/BlackhawkRescueMission5.lua"))()
-```
 ## BracketV3
 ```lua
 local Config = {
@@ -171,31 +150,4 @@ local Slider4 = Section4:CreateSlider("Tile Scale",0,1,nil,false, function(Value
 	Window:SetTileScale(Value)
 end)
 Slider4:SetValue(0.5)
-```
-## TPR:R Hax
-```lua
-getgenv().Config = {
-    PrimaryColor = Color3.fromRGB(50, 50, 100),
-    SecondaryColor = Color3.fromRGB(25, 25, 50),
-    AccentColor = Color3.fromRGB(15, 15, 25),
-    TextColor =  Color3.new(1,1,1),
-    Font = Enum.Font.SourceSansSemibold,
-    TextSize = 18,
-    HeaderWidth = 250,
-    HeaderHeight = 35,
-    EntryMargin = 1,
-    AnimationDuration = 0.5,
-    AnimationEasingStyle = Enum.EasingStyle.Linear,
-    DefaultEntryHeight = 45,
-
-    SoundId = 142376088,
-    Volume = 0.5,
-    Type = "Looping",
-    Pitch = 1,
-
-    RC = false, -- don't touch it
-    AF = false -- don't touch it
-}
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Roblox/main/TPRRHax.lua"))()
 ```
