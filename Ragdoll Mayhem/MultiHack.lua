@@ -1,8 +1,9 @@
 local UserInputService = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
-local PlayerService = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
+
+local PlayerService = game:GetService("Players")
 local LocalPlayer = PlayerService.LocalPlayer
 
 if not Workspace:FindFirstChild("Projectiles") and not Workspace:FindFirstChild("Drops") and not Workspace:FindFirstChild("WaterColPart") then
@@ -96,10 +97,9 @@ end)
 
 if Config.AimHitbox == "Head" then
     HeadOption:SetOption()
-elseif Config.AimHitbox == "Torso" then
+else
     TorsoOption:SetOption()
 end
-
 
 local CircleToggle = Section2:CreateToggle("Circle Visible", nil, function(State)
     Config.CircleVisible = State
@@ -170,55 +170,55 @@ ESPRainbowToggle:SetState(Config.Rainbow)
 
 
 local Toggle3 = Section4:CreateToggle("UI Toggle", nil, function(State)
-	Window:Toggle(State)
+    Window:Toggle(State)
 end)
 Toggle3:CreateKeybind(tostring(UIConfig.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
-	UIConfig.Keybind = Enum.KeyCode[Key]
+    UIConfig.Keybind = Enum.KeyCode[Key]
 end)
 Toggle3:SetState(true)
 
 local Colorpicker3 = Section4:CreateColorpicker("UI Color", function(Color)
-	Window:ChangeColor(Color)
+    Window:ChangeColor(Color)
 end)
 Colorpicker3:UpdateColor(UIConfig.Color)
 
 -- credits to jan for patterns
 local Dropdown3 = Section5:CreateDropdown("Image")
 local Option7 = Dropdown3:AddOption("Default", function(String)
-	Window:SetBackground("2151741365")
+    Window:SetBackground("2151741365")
 end)
 local Option8 = Dropdown3:AddOption("Hearts", function(String)
-	Window:SetBackground("6073763717")
+    Window:SetBackground("6073763717")
 end)
 local Option9 = Dropdown3:AddOption("Abstract", function(String)
-	Window:SetBackground("6073743871")
+    Window:SetBackground("6073743871")
 end)
 local Option10 = Dropdown3:AddOption("Hexagon", function(String)
-	Window:SetBackground("6073628839")
+    Window:SetBackground("6073628839")
 end)
 local Option11 = Dropdown3:AddOption("Circles", function(String)
-	Window:SetBackground("6071579801")
+    Window:SetBackground("6071579801")
 end)
 local Option12 = Dropdown3:AddOption("Lace With Flowers", function(String)
-	Window:SetBackground("6071575925")
+    Window:SetBackground("6071575925")
 end)
 local Option13 = Dropdown3:AddOption("Floral", function(String)
-	Window:SetBackground("5553946656")
+    Window:SetBackground("5553946656")
 end)
 Option7:SetOption()
 
 local Colorpicker4 = Section5:CreateColorpicker("Color", function(Color)
-	Window:SetBackgroundColor(Color)
+    Window:SetBackgroundColor(Color)
 end)
 Colorpicker4:UpdateColor(Color3.new(1,1,1))
 
 local Slider3 = Section5:CreateSlider("Transparency",0,1,nil,false, function(Value)
-	Window:SetBackgroundTransparency(Value)
+    Window:SetBackgroundTransparency(Value)
 end)
 Slider3:SetValue(0)
 
 local Slider4 = Section5:CreateSlider("Tile Scale",0,1,nil,false, function(Value)
-	Window:SetTileScale(Value)
+    Window:SetTileScale(Value)
 end)
 Slider4:SetValue(0.5)
 
@@ -375,27 +375,30 @@ local function CreateESP(Model)
 end
 
 local function GetTarget()
-	local Camera = Workspace.CurrentCamera
-	for _, Player in pairs(PlayerService:GetPlayers()) do
-		if Player ~= LocalPlayer and TeamCheck(Player) then
-			if Player.Character and Player.Character:FindFirstChild(Config.AimHitbox) then
-				if Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChildOfClass("Humanoid").Health ~= 0 then
-					local Vector, OnScreen = Camera:WorldToViewportPoint(Player.Character:FindFirstChild(Config.AimHitbox).Position)
-					if OnScreen then
-						local VectorMagnitude = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(Vector.X, Vector.Y)).Magnitude
-						if VectorMagnitude <= Config.FieldOfView then
-							return Player.Character:FindFirstChild(Config.AimHitbox)
-						end
-					end
-				end
-			end
-		end
-	end
+    local Camera = Workspace.CurrentCamera
+    for _, Player in pairs(PlayerService:GetPlayers()) do
+        if Player ~= LocalPlayer and TeamCheck(Player) then
+            if Player.Character and Player.Character:FindFirstChild(Config.AimHitbox) then
+                if Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChildOfClass("Humanoid").Health ~= 0 then
+                    local Vector, OnScreen = Camera:WorldToViewportPoint(Player.Character:FindFirstChild(Config.AimHitbox).Position)
+                    if OnScreen then
+                        local VectorMagnitude = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(Vector.X, Vector.Y)).Magnitude
+                        if VectorMagnitude <= Config.FieldOfView then
+                            return Player.Character:FindFirstChild(Config.AimHitbox)
+                        end
+                    end
+                end
+            end
+        end
+    end
 end
 
 local function returnHit(hit, args)
+    local Camera = Workspace.CurrentCamera
+    local CameraPosition = Camera.CFrame.Position
     if table.find(args[2],LocalPlayer.Character,1) and table.find(args[2],Workspace.Drops,2) and table.find(args[2],Workspace.Projectiles,4) and table.find(args[2],Workspace.WaterColPart,5) then
-        args[1] = Ray.new(args[1].Origin, (hit.Position + Vector3.new(0, (args[1].Origin - hit.Position).Magnitude / 500, 0) - args[1].Origin).Unit * 500)
+        --args[1] = Ray.new(args[1].Origin, (hit.Position + Vector3.new(0, (args[1].Origin - hit.Position).Magnitude / 500, 0) - args[1].Origin).Unit * 500)
+        args[1] = Ray.new(CameraPosition, (hit.Position - CameraPosition))
         return
     end
 end
@@ -432,17 +435,15 @@ end)
 
 local Circle = Drawing.new("Circle")
 RunService.Heartbeat:Connect(function()
-    if Circle then
-        Circle.Visible = Config.CircleVisible
-        Circle.Transparency = Config.CircleTransparency
-        Circle.Color = Config.CircleColor
+    Circle.Visible = Config.CircleVisible
+    Circle.Transparency = Config.CircleTransparency
+    Circle.Color = Config.CircleColor
 
-        Circle.Thickness = Config.CircleThickness
-        Circle.NumSides = Config.CircleNumSides
-        Circle.Radius = Config.FieldOfView
-        Circle.Filled = Config.CircleFilled
-        Circle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
-    end
+    Circle.Thickness = Config.CircleThickness
+    Circle.NumSides = Config.CircleNumSides
+    Circle.Radius = Config.FieldOfView
+    Circle.Filled = Config.CircleFilled
+    Circle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
 end)
 
 RunService.RenderStepped:Connect(function()
