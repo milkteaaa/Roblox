@@ -1,21 +1,17 @@
-local Library = {
-	Toggle = true,
-	FirstTab = nil,
-	TabCount = 0,
-	ColorTable = {}
-}
+local Library = {Toggle = true,FirstTab = nil,TabCount = 0,ColorTable = {}}
+
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
-local function MakeDraggable(TopbarObject, Object)
+local function MakeDraggable(ClickObject, Object)
 	local Dragging = nil
 	local DragInput = nil
 	local DragStart = nil
 	local StartPosition = nil
 	
-	TopbarObject.InputBegan:Connect(function(Input)
+	ClickObject.InputBegan:Connect(function(Input)
 		if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 			Dragging = true
 			DragStart = Input.Position
@@ -29,7 +25,7 @@ local function MakeDraggable(TopbarObject, Object)
 		end
 	end)
 	
-	TopbarObject.InputChanged:Connect(function(Input)
+	ClickObject.InputChanged:Connect(function(Input)
 		if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
 			DragInput = Input
 		end
@@ -275,6 +271,41 @@ function Library:CreateWindow(Config, Parent)
 				end
 
 				return ButtonInit
+			end
+			function SectionInit:CreateTextBox(Name, PlaceHolder, NumbersOnly, Callback)
+				local TextBoxInit = {}
+				local TextBox = Folder.TextBox:Clone()
+				TextBox.Name = Name .. " T"
+				TextBox.Parent = Section.Container
+				TextBox.Title.Text = Name
+				TextBox.Background.Input.PlaceholderText = PlaceHolder
+				TextBox.Title.Size = UDim2.new(1,0,0,TextBox.Title.TextBounds.Y + 5)
+				TextBox.Size = UDim2.new(1,-10,0,TextBox.Title.TextBounds.Y + 25)
+
+				TextBox.Background.Input.FocusLost:Connect(function()
+					if NumbersOnly and not tonumber(TextBox.Background.Input.Text) then
+						Callback(tonumber(TextBox.Background.Input.Text))
+						TextBox.Background.Input.Text = ""
+					else
+						Callback(TextBox.Background.Input.Text)
+						TextBox.Background.Input.Text = ""
+					end
+				end)
+
+				function TextBoxInit:AddToolTip(Name)
+					if tostring(Name):gsub(" ", "") ~= "" then
+						TextBox.MouseEnter:Connect(function()
+							Screen.ToolTip.Text = Name
+							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
+							Screen.ToolTip.Visible = true
+						end)
+
+						TextBox.MouseLeave:Connect(function()
+							Screen.ToolTip.Visible = false
+						end)
+					end
+				end
+				return TextBoxInit
 			end
 			function SectionInit:CreateToggle(Name, Default, Callback)
 				local DefaultLocal = Default or false
