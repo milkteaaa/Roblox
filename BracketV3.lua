@@ -41,9 +41,9 @@ end
 
 function Library:CreateWindow(Config, Parent)
 	local WindowInit = {}
-    local Folder = game:GetObjects("rbxassetid://7141683860")[1]
+    local Folder = script.Parent.Bracket--game:GetObjects("rbxassetid://7141683860")[1]
 	local Screen = Folder.Bracket:Clone()
-    syn.protect_gui(Screen)
+    --syn.protect_gui(Screen)
 	local Main = Screen.Main
 	local Holder = Main.Holder
 	local Topbar = Main.Topbar
@@ -224,11 +224,17 @@ function Library:CreateWindow(Config, Parent)
 			end)
 			
 			function SectionInit:CreateLabel(Name)
+				local LabelInit = {}
 				local Label = Folder.Label:Clone()
 				Label.Name = Name .. " L"
 				Label.Parent = Section.Container
 				Label.Text = Name
 				Label.Size = UDim2.new(1,-10,0,Label.TextBounds.Y)
+				function LabelInit:UpdateText(Text)
+					Label.Text = Text
+					Label.Size = UDim2.new(1,-10,0,Label.TextBounds.Y)
+				end
+				return LabelInit
 			end
 			function SectionInit:CreateButton(Name, Callback)
 				local ButtonInit = {}
