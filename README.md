@@ -19,7 +19,8 @@ local Section3 = Tab2:CreateSection("Menu")
 local Section4 = Tab2:CreateSection("Background")
 --local Section5 = Tab2:CreateSection("Misc")
 
-Section1:CreateLabel("Label 1")
+local Label1 = Section1:CreateLabel("Label 1")
+--Label1:UpdateText("Updated Label")
 -------------
 local Button1 = Section1:CreateButton("Button 1", function()
 	print("Click Button 1")
