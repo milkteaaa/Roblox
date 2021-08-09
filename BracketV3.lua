@@ -41,9 +41,9 @@ end
 
 function Library:CreateWindow(Config, Parent)
 	local WindowInit = {}
-    local Folder = script.Parent.Bracket--game:GetObjects("rbxassetid://7141683860")[1]
+    local Folder = game:GetObjects("rbxassetid://7141683860")[1]
 	local Screen = Folder.Bracket:Clone()
-    --syn.protect_gui(Screen)
+    syn.protect_gui(Screen)
 	local Main = Screen.Main
 	local Holder = Main.Holder
 	local Topbar = Main.Topbar
