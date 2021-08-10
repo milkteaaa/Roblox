@@ -6,8 +6,8 @@ local Workspace = game:GetService("Workspace")
 local PlayerService = game:GetService("Players")
 local LocalPlayer = PlayerService.LocalPlayer
 
-if not Workspace:FindFirstChild("Projectiles") and not Workspace:FindFirstChild("Drops") and not Workspace:FindFirstChild("WaterColPart") then
-    warn("Cant execute the script, update needed\nLightning Splash probably renamed something")
+if not Workspace:FindFirstChild("Projectiles") or not Workspace:FindFirstChild("Drops") or not Workspace:FindFirstChild("WaterColPart") then
+    warn("cant find required folders")
     return
 end
 
@@ -58,6 +58,7 @@ local Tab2 = Window:CreateTab("UI Settings")
 local Section1 = Tab1:CreateSection("Aimbot")
 local Section2 = Tab1:CreateSection("FOV Circle")
 local Section3 = Tab1:CreateSection("ESP")
+
 local Section4 = Tab2:CreateSection("Menu")
 local Section5 = Tab2:CreateSection("Background")
 
@@ -85,21 +86,14 @@ local FOVSlider = Section1:CreateSlider("Field Of View", 0,500,nil,true, functio
     Config.FieldOfView = Value
 end)
 FOVSlider:SetValue(Config.FieldOfView)
-FOVSlider:AddToolTip("100 is recommended for silent aim\n100 or more recommended for aimbot")
 
-local AimHitboxDropdown = Section1:CreateDropdown("Aim Part")
-local HeadOption = AimHitboxDropdown:AddOption("Head", function(String)
-    Config.AimHitbox = String
-end)
-local TorsoOption = AimHitboxDropdown:AddOption("Torso", function(String)
-    Config.AimHitbox = String
-end)
-
-if Config.AimHitbox == "Head" then
-    HeadOption:SetOption()
-else
-    TorsoOption:SetOption()
-end
+local AimHitboxDropdown = Section1:CreateDropdown("Aim Part", {"Head","Torso"}, function(String)
+    if String == "Head" then
+        Config.AimHitbox = "Head"
+    elseif String == "Torso" then
+        Config.AimHitbox = "Torso"
+    end
+end, Config.AimHitbox)
 
 local CircleToggle = Section2:CreateToggle("Circle Visible", nil, function(State)
     Config.CircleVisible = State
@@ -167,60 +161,64 @@ local ESPRainbowToggle = Section3:CreateToggle("ESP Rainbow", nil, function(Stat
 end)
 ESPRainbowToggle:SetState(Config.Rainbow)
 
-
-
-local Toggle3 = Section4:CreateToggle("UI Toggle", nil, function(State)
+local Toggle3 = Section4:CreateToggle("UI Toggle", true, function(State)
     Window:Toggle(State)
 end)
 Toggle3:CreateKeybind(tostring(UIConfig.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
     UIConfig.Keybind = Enum.KeyCode[Key]
 end)
-Toggle3:SetState(true)
 
 local Colorpicker3 = Section4:CreateColorpicker("UI Color", function(Color)
     Window:ChangeColor(Color)
 end)
 Colorpicker3:UpdateColor(UIConfig.Color)
 
+Section4:CreateButton("Server Hop", function()
+    -- credits to infinite yield for serverhop
+    local x = {}
+    for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
+        if type(v) == "table" and v.id ~= game.JobId then
+            x[#x + 1] = v.id
+        end
+    end
+    if #x > 0 then
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
+    else
+        return warn("Serverhop: Couldn't find a server.")
+    end
+end)
+
 -- credits to jan for patterns
-local Dropdown3 = Section5:CreateDropdown("Image")
-local Option7 = Dropdown3:AddOption("Default", function(String)
-    Window:SetBackground("2151741365")
-end)
-local Option8 = Dropdown3:AddOption("Hearts", function(String)
-    Window:SetBackground("6073763717")
-end)
-local Option9 = Dropdown3:AddOption("Abstract", function(String)
-    Window:SetBackground("6073743871")
-end)
-local Option10 = Dropdown3:AddOption("Hexagon", function(String)
-    Window:SetBackground("6073628839")
-end)
-local Option11 = Dropdown3:AddOption("Circles", function(String)
-    Window:SetBackground("6071579801")
-end)
-local Option12 = Dropdown3:AddOption("Lace With Flowers", function(String)
-    Window:SetBackground("6071575925")
-end)
-local Option13 = Dropdown3:AddOption("Floral", function(String)
-    Window:SetBackground("5553946656")
-end)
-Option7:SetOption()
+local Dropdown3 = Section5:CreateDropdown("Image", {"Default","Hearts","Abstract","Hexagon","Circles","Lace With Flowers","Floral"}, function(Name)
+	if Name == "Default" then
+		Window:SetBackground("2151741365")
+	elseif Name == "Hearts" then
+		Window:SetBackground("6073763717")
+	elseif Name == "Abstract" then
+		Window:SetBackground("6073743871")
+	elseif Name == "Hexagon" then
+		Window:SetBackground("6073628839")
+	elseif Name == "Circles" then
+		Window:SetBackground("6071579801")
+	elseif Name == "Lace With Flowers" then
+		Window:SetBackground("6071575925")
+	elseif Name == "Floral" then
+		Window:SetBackground("5553946656")
+	end
+end, "Default")
 
 local Colorpicker4 = Section5:CreateColorpicker("Color", function(Color)
     Window:SetBackgroundColor(Color)
 end)
 Colorpicker4:UpdateColor(Color3.new(1,1,1))
 
-local Slider3 = Section5:CreateSlider("Transparency",0,1,nil,false, function(Value)
+local Slider3 = Section5:CreateSlider("Transparency",0,1,0,false, function(Value)
     Window:SetBackgroundTransparency(Value)
 end)
-Slider3:SetValue(0)
 
-local Slider4 = Section5:CreateSlider("Tile Scale",0,1,nil,false, function(Value)
+local Slider4 = Section5:CreateSlider("Tile Scale",0,1,0.5,false, function(Value)
     Window:SetTileScale(Value)
 end)
-Slider4:SetValue(0.5)
 
 local function TeamCheck(Target)
     if Config.TeamCheck then
@@ -393,12 +391,11 @@ local function GetTarget()
     end
 end
 
-local function returnHit(hit, args)
+local function returnHit(hit, args, wep)
     local Camera = Workspace.CurrentCamera
     local CameraPosition = Camera.CFrame.Position
     if table.find(args[2],LocalPlayer.Character,1) and table.find(args[2],Workspace.Drops,2) and table.find(args[2],Workspace.Projectiles,4) and table.find(args[2],Workspace.WaterColPart,5) then
-        --args[1] = Ray.new(args[1].Origin, (hit.Position + Vector3.new(0, (args[1].Origin - hit.Position).Magnitude / 500, 0) - args[1].Origin).Unit * 500)
-        args[1] = Ray.new(CameraPosition, (hit.Position - CameraPosition))
+        args[1] = Ray.new(CameraPosition, hit.Position - CameraPosition)
         return
     end
 end
@@ -408,7 +405,7 @@ namecall = hookmetamethod(game, "__namecall", function(self, ...)
     local args = {...}
     if namecallmethod == "FindPartOnRayWithIgnoreList" then
         if hit then
-            returnHit(hit, args)
+            returnHit(hit, args, Weapon)
         end
     end
     return namecall(self, unpack(args))
