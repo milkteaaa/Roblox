@@ -391,7 +391,7 @@ local function GetTarget()
     end
 end
 
-local function returnHit(hit, args, wep)
+local function returnHit(hit, args)
     local Camera = Workspace.CurrentCamera
     local CameraPosition = Camera.CFrame.Position
     if table.find(args[2],LocalPlayer.Character,1) and table.find(args[2],Workspace.Drops,2) and table.find(args[2],Workspace.Projectiles,4) and table.find(args[2],Workspace.WaterColPart,5) then
@@ -405,7 +405,7 @@ namecall = hookmetamethod(game, "__namecall", function(self, ...)
     local args = {...}
     if namecallmethod == "FindPartOnRayWithIgnoreList" then
         if hit then
-            returnHit(hit, args, Weapon)
+            returnHit(hit, args)
         end
     end
     return namecall(self, unpack(args))
