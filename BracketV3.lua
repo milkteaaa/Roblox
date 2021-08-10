@@ -41,15 +41,15 @@ end
 
 function Library:CreateWindow(Config, Parent)
 	local WindowInit = {}
-    local Folder = game:GetObjects("rbxassetid://7141683860")[1]
+	local Folder = game:GetObjects("rbxassetid://7141683860")[1]
 	local Screen = Folder.Bracket:Clone()
-    syn.protect_gui(Screen)
 	local Main = Screen.Main
 	local Holder = Main.Holder
 	local Topbar = Main.Topbar
 	local TContainer = Holder.TContainer
 	local TBContainer = Holder.TBContainer.Holder
 
+	syn.protect_gui(Screen)
 	Screen.Name =  HttpService:GenerateGUID(false)
 	Screen.Parent = Parent
 	Topbar.WindowName.Text = Config.WindowName
@@ -538,7 +538,7 @@ function Library:CreateWindow(Config, Parent)
 
 				return SliderInit
 			end
-			function SectionInit:CreateDropdown(Name)
+			function SectionInit:CreateDropdown(Name, OptionTable, Callback)
 				local DropdownInit = {}
 				local Dropdown = Folder.Dropdown:Clone()
 				Dropdown.Name = Name .. " D"
@@ -562,27 +562,12 @@ function Library:CreateWindow(Config, Parent)
 					end
 				end)
 
-				function DropdownInit:AddToolTip(Name)
-					if tostring(Name):gsub(" ", "") ~= "" then
-						Dropdown.MouseEnter:Connect(function()
-							Screen.ToolTip.Text = Name
-							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
-							Screen.ToolTip.Visible = true
-						end)
-
-						Dropdown.MouseLeave:Connect(function()
-							Screen.ToolTip.Visible = false
-						end)
-					end
-				end
-
-				function DropdownInit:AddOption(Name, Callback)
-					local OptionInit = {}
+				for _,OptionName in pairs(OptionTable) do
 					local Option = Folder.Option:Clone()
-					Option.Name = Name .. " O"
+					Option.Name = OptionName
 					Option.Parent = Dropdown.Container.Holder.Container
 
-					Option.Title.Text = Name
+					Option.Title.Text = OptionName
 					Option.BackgroundColor3 = Config.Color
 					Option.Size = UDim2.new(1,0,0,Option.Title.TextBounds.Y + 5)
 					Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
@@ -601,20 +586,44 @@ function Library:CreateWindow(Config, Parent)
 					end)
 
 					Option.MouseButton1Click:Connect(function()
-						Dropdown.Container.Value.Text = Name
-						Callback(Name)
+						Dropdown.Container.Value.Text = OptionName
+						Callback(OptionName)
 					end)
+				end
 
-					function OptionInit:SetOption()
-						Dropdown.Container.Value.Text = Name
-						Callback(Name)
+				function DropdownInit:AddToolTip(Name)
+					if tostring(Name):gsub(" ", "") ~= "" then
+						Dropdown.MouseEnter:Connect(function()
+							Screen.ToolTip.Text = Name
+							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
+							Screen.ToolTip.Visible = true
+						end)
+
+						Dropdown.MouseLeave:Connect(function()
+							Screen.ToolTip.Visible = false
+						end)
 					end
-					function OptionInit:Remove()
-						Option:Destroy()
-						Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
-						Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y + Dropdown.Title.TextBounds.Y + 30)
+				end
+
+				function DropdownInit:GetOption()
+					return Dropdown.Container.Value.Text
+				end
+				function DropdownInit:SetOption(Name)
+					for _,Option in pairs(Dropdown.Container.Holder.Container:GetChildren()) do
+						if Option:IsA("TextButton") and string.find(Option.Name, Name) then
+							Dropdown.Container.Value.Text = Option.Name
+							Callback(Name)
+						end
 					end
-					return OptionInit
+				end
+				function DropdownInit:RemoveOption(Name)
+					for _,Option in pairs(Dropdown.Container.Holder.Container:GetChildren()) do
+						if Option:IsA("TextButton") and string.find(Option.Name, Name) then
+							Option:Destroy()
+						end
+					end
+					Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
+							Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y + Dropdown.Title.TextBounds.Y + 30)
 				end
 				function DropdownInit:ClearOptions()
 					for _, Option in pairs(Dropdown.Container.Holder.Container:GetChildren()) do
@@ -624,9 +633,6 @@ function Library:CreateWindow(Config, Parent)
 					end
 					Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
 					Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y + Dropdown.Title.TextBounds.Y + 30)
-				end
-				function DropdownInit:GetOption()
-					return Dropdown.Container.Value.Text
 				end
 				return DropdownInit
 			end
