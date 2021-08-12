@@ -73,6 +73,11 @@ function Library:CreateWindow(Config, Parent)
 				TabButton.Size = UDim2.new(0,480 / Library.TabCount,1,0)
 			end
 		end
+		for _,Pallete in pairs(Screen:GetChildren()) do
+			if Pallete:IsA("Frame") and Pallete.Name ~= "Main" then
+				Pallete.Visible = false
+			end
+		end
 	end
 	local function KeepFirst()
 		for _,Tab in pairs(TContainer:GetChildren()) do
@@ -243,7 +248,6 @@ function Library:CreateWindow(Config, Parent)
 				Button.Parent = Section.Container
 				Button.Title.Text = Name
 				Button.Size = UDim2.new(1,-10,0,Button.Title.TextBounds.Y + 5)
-
 				table.insert(Library.ColorTable, Button)
 
 				Button.MouseButton1Down:Connect(function()
@@ -640,18 +644,16 @@ function Library:CreateWindow(Config, Parent)
 			end
 			function SectionInit:CreateColorpicker(Name,Callback)
 				local ColorpickerInit = {}
-
 				local Colorpicker = Folder.Colorpicker:Clone()
 				local Pallete = Folder.Pallete:Clone()
+
 				Colorpicker.Name = Name .. " CP"
 				Colorpicker.Parent = Section.Container
-
 				Colorpicker.Title.Text = Name
 				Colorpicker.Size = UDim2.new(1,-10,0,Colorpicker.Title.TextBounds.Y + 5)
 
 				Pallete.Name = Name .. " P"
 				Pallete.Parent = Screen
-				Pallete.Position = UDim2.new(0,Colorpicker.Color.AbsolutePosition.X - 129,0,Colorpicker.Color.AbsolutePosition.Y + 52)
 
 				local ColorTable = {
 					Hue = 1,
@@ -660,8 +662,7 @@ function Library:CreateWindow(Config, Parent)
 				}
 				local ColorRender = nil
 				local HueRender = nil
-				local ColorpickerToggle = false
-
+				local ColorpickerRender = nil
 				local function UpdateColor()
 					Colorpicker.Color.BackgroundColor3 = Color3.fromHSV(ColorTable.Hue,ColorTable.Saturation,ColorTable.Value)
 					Pallete.GradientPallete.BackgroundColor3 = Color3.fromHSV(ColorTable.Hue,1,1)
@@ -670,12 +671,14 @@ function Library:CreateWindow(Config, Parent)
 				end
 
 				Colorpicker.MouseButton1Click:Connect(function()
-					ColorpickerToggle = not ColorpickerToggle
-					if ColorpickerToggle then
+					if not Pallete.Visible then
+						ColorpickerRender = RunService.RenderStepped:Connect(function()
+							Pallete.Position = UDim2.new(0,Colorpicker.Color.AbsolutePosition.X - 129,0,Colorpicker.Color.AbsolutePosition.Y + 52)
+						end)
 						Pallete.Visible = true
-						Pallete.Position = UDim2.new(0,Colorpicker.Color.AbsolutePosition.X - 129,0,Colorpicker.Color.AbsolutePosition.Y + 52)
 					else
 						Pallete.Visible = false
+						ColorpickerRender:Disconnect()
 					end
 				end)
 
